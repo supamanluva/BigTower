@@ -8,11 +8,12 @@ import { getStoreConfiguration } from '../configuration';
 
 import * as app from './app';
 import * as container from './container';
+import * as componentStore from './component';
 
 // Store Configuration Schema
 const configurationSchema = joi.object().keys({
     path: joi.string().default('/store'),
-    file: joi.string().default('wud.json'),
+    file: joi.string().default('bigtower.json'),
 });
 
 // Validate Configuration
@@ -32,6 +33,7 @@ const db = new Loki(`${configuration.path}/${configuration.file}`, {
 function createCollections() {
     app.createCollections(db);
     container.createCollections(db);
+    componentStore.createCollections(db);
 }
 
 /**

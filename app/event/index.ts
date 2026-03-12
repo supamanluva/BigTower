@@ -5,22 +5,22 @@ import events from 'events';
 const eventEmitter = new events.EventEmitter();
 
 // Container related events
-const WUD_CONTAINER_ADDED = 'wud:container-added';
-const WUD_CONTAINER_UPDATED = 'wud:container-updated';
-const WUD_CONTAINER_REMOVED = 'wud:container-removed';
-const WUD_CONTAINER_REPORT = 'wud:container-report';
-const WUD_CONTAINER_REPORTS = 'wud:container-reports';
+const BT_CONTAINER_ADDED = 'bt:container-added';
+const BT_CONTAINER_UPDATED = 'bt:container-updated';
+const BT_CONTAINER_REMOVED = 'bt:container-removed';
+const BT_CONTAINER_REPORT = 'bt:container-report';
+const BT_CONTAINER_REPORTS = 'bt:container-reports';
 
 // Watcher related events
-const WUD_WATCHER_START = 'wud:watcher-start';
-const WUD_WATCHER_STOP = 'wud:watcher-stop';
+const BT_WATCHER_START = 'bt:watcher-start';
+const BT_WATCHER_STOP = 'bt:watcher-stop';
 
 /**
  * Emit ContainerReports event.
  * @param containerReports
  */
 export function emitContainerReports(containerReports) {
-    eventEmitter.emit(WUD_CONTAINER_REPORTS, containerReports);
+    eventEmitter.emit(BT_CONTAINER_REPORTS, containerReports);
 }
 
 /**
@@ -28,7 +28,7 @@ export function emitContainerReports(containerReports) {
  * @param handler
  */
 export function registerContainerReports(handler) {
-    eventEmitter.on(WUD_CONTAINER_REPORTS, handler);
+    eventEmitter.on(BT_CONTAINER_REPORTS, handler);
 }
 
 /**
@@ -36,7 +36,7 @@ export function registerContainerReports(handler) {
  * @param containerReport
  */
 export function emitContainerReport(containerReport) {
-    eventEmitter.emit(WUD_CONTAINER_REPORT, containerReport);
+    eventEmitter.emit(BT_CONTAINER_REPORT, containerReport);
 }
 
 /**
@@ -44,7 +44,7 @@ export function emitContainerReport(containerReport) {
  * @param handler
  */
 export function registerContainerReport(handler) {
-    eventEmitter.on(WUD_CONTAINER_REPORT, handler);
+    eventEmitter.on(BT_CONTAINER_REPORT, handler);
 }
 
 /**
@@ -52,7 +52,7 @@ export function registerContainerReport(handler) {
  * @param containerAdded
  */
 export function emitContainerAdded(containerAdded) {
-    eventEmitter.emit(WUD_CONTAINER_ADDED, containerAdded);
+    eventEmitter.emit(BT_CONTAINER_ADDED, containerAdded);
 }
 
 /**
@@ -60,7 +60,7 @@ export function emitContainerAdded(containerAdded) {
  * @param handler
  */
 export function registerContainerAdded(handler) {
-    eventEmitter.on(WUD_CONTAINER_ADDED, handler);
+    eventEmitter.on(BT_CONTAINER_ADDED, handler);
 }
 
 /**
@@ -68,7 +68,7 @@ export function registerContainerAdded(handler) {
  * @param containerUpdated
  */
 export function emitContainerUpdated(containerUpdated) {
-    eventEmitter.emit(WUD_CONTAINER_UPDATED, containerUpdated);
+    eventEmitter.emit(BT_CONTAINER_UPDATED, containerUpdated);
 }
 
 /**
@@ -76,7 +76,7 @@ export function emitContainerUpdated(containerUpdated) {
  * @param handler
  */
 export function registerContainerUpdated(handler) {
-    eventEmitter.on(WUD_CONTAINER_UPDATED, handler);
+    eventEmitter.on(BT_CONTAINER_UPDATED, handler);
 }
 
 /**
@@ -84,7 +84,7 @@ export function registerContainerUpdated(handler) {
  * @param containerRemoved
  */
 export function emitContainerRemoved(containerRemoved) {
-    eventEmitter.emit(WUD_CONTAINER_REMOVED, containerRemoved);
+    eventEmitter.emit(BT_CONTAINER_REMOVED, containerRemoved);
 }
 
 /**
@@ -92,21 +92,21 @@ export function emitContainerRemoved(containerRemoved) {
  * @param handler
  */
 export function registerContainerRemoved(handler) {
-    eventEmitter.on(WUD_CONTAINER_REMOVED, handler);
+    eventEmitter.on(BT_CONTAINER_REMOVED, handler);
 }
 
 export function emitWatcherStart(watcher) {
-    eventEmitter.emit(WUD_WATCHER_START, watcher);
+    eventEmitter.emit(BT_WATCHER_START, watcher);
 }
 
 export function registerWatcherStart(handler) {
-    eventEmitter.on(WUD_WATCHER_START, handler);
+    eventEmitter.on(BT_WATCHER_START, handler);
 }
 
 export function emitWatcherStop(watcher) {
-    eventEmitter.emit(WUD_WATCHER_STOP, watcher);
+    eventEmitter.emit(BT_WATCHER_STOP, watcher);
 }
 
 export function registerWatcherStop(handler) {
-    eventEmitter.on(WUD_WATCHER_STOP, handler);
+    eventEmitter.on(BT_WATCHER_STOP, handler);
 }

@@ -41,7 +41,7 @@ class Dockercompose extends Docker {
             file: this.joi.string().optional(),
             backup: this.joi.boolean().default(false),
             // Add configuration for the label name to look for
-            composeFileLabel: this.joi.string().default('wud.compose.file'),
+            composeFileLabel: this.joi.string().default('bt.compose.file'),
         });
     }
 

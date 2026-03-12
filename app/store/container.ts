@@ -105,6 +105,24 @@ export function getContainer(id) {
 }
 
 /**
+ * Get container by watcher and name.
+ * Used to find old container entries after recreation (new ID).
+ * @param watcher
+ * @param name
+ */
+export function getContainerByName(watcher, name) {
+    const container = containers.findOne({
+        'data.watcher': watcher,
+        'data.name': name,
+    });
+
+    if (container !== null) {
+        return validateContainer(container.data);
+    }
+    return undefined;
+}
+
+/**
  * Delete container by id.
  * @param id
  */

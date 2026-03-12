@@ -242,6 +242,40 @@ async function watchContainer(req, res) {
 }
 
 /**
+ * Update container settings (autoUpdate, cron).
+ * @param req
+ * @param res
+ */
+function updateContainerSettings(req, res) {
+    const { id } = req.params;
+    const container = storeContainer.getContainer(id);
+    if (!container) {
+        return res.sendStatus(404);
+    }
+
+    const { autoUpdate, cron } = req.body || {};
+
+    // Validate cron expression if provided
+    if (cron !== undefined && cron !== null && cron !== '') {
+        // Basic cron validation: 5 space-separated fields
+        const cronParts = String(cron).trim().split(/\s+/);
+        if (cronParts.length < 5 || cronParts.length > 6) {
+            return res.status(400).json({ error: 'Invalid cron expression. Expected 5 or 6 fields.' });
+        }
+    }
+
+    if (autoUpdate !== undefined) {
+        container.autoUpdate = Boolean(autoUpdate);
+    }
+    if (cron !== undefined) {
+        container.cron = cron || undefined;
+    }
+
+    const updated = storeContainer.updateContainer(container);
+    res.status(200).json(updated);
+}
+
+/**
  * Init Router.
  * @returns {*}
  */
@@ -251,6 +285,7 @@ export function init() {
     router.post('/watch', watchContainers);
     router.get('/:id', getContainer);
     router.delete('/:id', deleteContainer);
+    router.patch('/:id/settings', updateContainerSettings);
     router.get('/:id/triggers', getContainerTriggers);
     router.post('/:id/triggers/:triggerType/:triggerName', runTrigger);
     router.post('/:id/watch', watchContainer);

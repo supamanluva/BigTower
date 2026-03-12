@@ -13,16 +13,18 @@ import {
 } from '../../../tag';
 import * as event from '../../../event';
 import {
-    wudWatch,
-    wudTagInclude,
-    wudTagExclude,
-    wudTagTransform,
-    wudWatchDigest,
-    wudLinkTemplate,
-    wudDisplayName,
-    wudDisplayIcon,
-    wudTriggerInclude,
-    wudTriggerExclude,
+    btWatch,
+    btTagInclude,
+    btTagExclude,
+    btTagTransform,
+    btWatchDigest,
+    btLinkTemplate,
+    btDisplayName,
+    btDisplayIcon,
+    btTriggerInclude,
+    btTriggerExclude,
+    btCron,
+    btAutoUpdate,
 } from './label';
 import * as storeContainer from '../../../store/container';
 import log from '../../../log';
@@ -289,27 +291,27 @@ function getRepoDigest(containerImage: any) {
 
 /**
  * Return true if container must be watched.
- * @param wudWatchLabelValue the value of the wud.watch label
+ * @param btWatchLabelValue the value of the bt.watch label
  * @param watchByDefault true if containers must be watched by default
  * @returns {boolean}
  */
 function isContainerToWatch(
-    wudWatchLabelValue: string,
+    btWatchLabelValue: string,
     watchByDefault: boolean,
 ) {
-    return wudWatchLabelValue !== undefined && wudWatchLabelValue !== ''
-        ? wudWatchLabelValue.toLowerCase() === 'true'
+    return btWatchLabelValue !== undefined && btWatchLabelValue !== ''
+        ? btWatchLabelValue.toLowerCase() === 'true'
         : watchByDefault;
 }
 
 /**
  * Return true if container digest must be watched.
- * @param {string} wudWatchDigestLabelValue - the value of wud.watch.digest label
+ * @param {string} btWatchDigestLabelValue - the value of bt.watch.digest label
  * @param {object} parsedImage - object containing at least `domain` property
  * @returns {boolean}
  */
 function isDigestToWatch(
-    wudWatchDigestLabelValue: string,
+    btWatchDigestLabelValue: string,
     parsedImage: any,
     isSemver: boolean,
 ) {
@@ -321,10 +323,10 @@ function isDigestToWatch(
         domain.endsWith('.docker.io');
 
     if (
-        wudWatchDigestLabelValue !== undefined &&
-        wudWatchDigestLabelValue !== ''
+        btWatchDigestLabelValue !== undefined &&
+        btWatchDigestLabelValue !== ''
     ) {
-        const shouldWatch = wudWatchDigestLabelValue.toLowerCase() === 'true';
+        const shouldWatch = btWatchDigestLabelValue.toLowerCase() === 'true';
         if (shouldWatch && isDockerHub) {
             log.warn(
                 `Watching digest for image ${parsedImage.path} with domain ${domain} may result in throttled requests`,
@@ -351,12 +353,13 @@ class Docker extends Watcher {
     public watchCronTimeout: any;
     public watchCronDebounced: any;
     public listenDockerEventsTimeout: any;
+    public perContainerCrons: Map<string, any> = new Map();
 
     ensureLogger() {
         if (!this.log) {
             try {
                 this.log = log.child({
-                    component: `watcher.docker.${this.name || 'default'}`,
+                component: `watcher.docker.${this.name || 'default'}`,
                 });
             } catch (error) {
                 // Fallback to silent logger if log module fails
@@ -401,7 +404,7 @@ class Docker extends Watcher {
         this.initWatcher();
         if (this.configuration.watchdigest !== undefined) {
             this.log.warn(
-                "WUD_WATCHER_{watcher_name}_WATCHDIGEST environment variable is deprecated and won't be supported in upcoming versions",
+                "BT_WATCHER_{watcher_name}_WATCHDIGEST environment variable is deprecated and won't be supported in upcoming versions",
             );
         }
         this.log.info(`Cron scheduled (${this.configuration.cron})`);
@@ -472,6 +475,11 @@ class Docker extends Watcher {
             clearTimeout(this.listenDockerEventsTimeout);
             delete this.watchCronDebounced;
         }
+        // Stop all per-container cron jobs
+        for (const [id, cronJob] of this.perContainerCrons) {
+            cronJob.stop();
+        }
+        this.perContainerCrons.clear();
     }
 
     /**
@@ -629,9 +637,18 @@ class Docker extends Watcher {
             );
         }
         try {
+            // Separate containers with custom cron from those using global cron
+            const globalContainers = containers.filter((c) => !c.cron);
+            const customCronContainers = containers.filter((c) => c.cron);
+
+            // Watch containers on global schedule
             const containerReports = await Promise.all(
-                containers.map((container) => this.watchContainer(container)),
+                globalContainers.map((container) => this.watchContainer(container)),
             );
+
+            // Set up per-container cron jobs for custom-scheduled containers
+            this.setupPerContainerCrons(customCronContainers);
+
             event.emitContainerReports(containerReports);
             return containerReports;
         } catch (e: any) {
@@ -642,6 +659,49 @@ class Docker extends Watcher {
         } finally {
             // Dispatch event to notify stop watching
             event.emitWatcherStop(this);
+        }
+    }
+
+    /**
+     * Set up individual cron jobs for containers with custom schedules.
+     * @param containers Containers that have a custom cron expression
+     */
+    setupPerContainerCrons(containers: Container[]) {
+        const currentIds = new Set(containers.map((c) => c.id));
+
+        // Remove cron jobs for containers no longer needing custom schedule
+        for (const [id, cronJob] of this.perContainerCrons) {
+            if (!currentIds.has(id)) {
+                cronJob.stop();
+                this.perContainerCrons.delete(id);
+                this.log.info(`Removed per-container cron for container ${id}`);
+            }
+        }
+
+        // Add or update cron jobs for containers with custom schedule
+        for (const container of containers) {
+            if (!this.perContainerCrons.has(container.id)) {
+                try {
+                    const cronExpression = container.cron!;
+                    const task = cron.schedule(cronExpression, async () => {
+                        this.ensureLogger();
+                        const logContainer = this.log.child({ container: fullName(container) });
+                        logContainer.info(`Per-container cron started (${cronExpression})`);
+                        try {
+                            // Use stored container if available, otherwise use the original
+                            const freshContainer = storeContainer.getContainer(container.id) || container;
+                            const report = await this.watchContainer(freshContainer);
+                            event.emitContainerReports([report]);
+                        } catch (e: any) {
+                            logContainer.warn(`Per-container cron error (${e.message})`);
+                        }
+                    });
+                    this.perContainerCrons.set(container.id, task);
+                    this.log.info(`Scheduled per-container cron for ${fullName(container)} (${container.cron})`);
+                } catch (e: any) {
+                    this.log.warn(`Invalid cron expression "${container.cron}" for ${fullName(container)}: ${e.message}`);
+                }
+            }
         }
     }
 
@@ -697,21 +757,23 @@ class Docker extends Watcher {
         // Filter on containers to watch
         const filteredContainers = containers.filter((container: any) =>
             isContainerToWatch(
-                container.Labels[wudWatch],
+                container.Labels[btWatch],
                 this.configuration.watchbydefault,
             ),
         );
         const containerPromises = filteredContainers.map((container: any) =>
             this.addImageDetailsToContainer(
                 container,
-                container.Labels[wudTagInclude],
-                container.Labels[wudTagExclude],
-                container.Labels[wudTagTransform],
-                container.Labels[wudLinkTemplate],
-                container.Labels[wudDisplayName],
-                container.Labels[wudDisplayIcon],
-                container.Labels[wudTriggerInclude],
-                container.Labels[wudTriggerExclude],
+                container.Labels[btTagInclude],
+                container.Labels[btTagExclude],
+                container.Labels[btTagTransform],
+                container.Labels[btLinkTemplate],
+                container.Labels[btDisplayName],
+                container.Labels[btDisplayIcon],
+                container.Labels[btTriggerInclude],
+                container.Labels[btTriggerExclude],
+                container.Labels[btCron],
+                container.Labels[btAutoUpdate],
             ).catch((e) => {
                 this.log.warn(
                     `Failed to fetch image detail for container ${container.Id}: ${e.message}`,
@@ -851,6 +913,8 @@ class Docker extends Watcher {
         displayIcon: string,
         triggerInclude: string,
         triggerExclude: string,
+        containerCron: string,
+        containerAutoUpdate: string,
     ) {
         const containerId = container.Id;
 
@@ -906,14 +970,14 @@ class Docker extends Watcher {
         const parsedTag = parseSemver(transformTag(transformTags, tagName));
         const isSemver = parsedTag !== null && parsedTag !== undefined;
         const watchDigest = isDigestToWatch(
-            container.Labels[wudWatchDigest],
+            container.Labels[btWatchDigest],
             parsedImage,
             isSemver,
         );
         if (!isSemver && !watchDigest) {
             this.ensureLogger();
             this.log.warn(
-                "Image is not a semver and digest watching is disabled so wud won't report any update. Please review the configuration to enable digest watching for this container or exclude this container from being watched",
+                "Image is not a semver and digest watching is disabled so BigTower won't report any update. Please review the configuration to enable digest watching for this container or exclude this container from being watched",
             );
         }
         return normalizeContainer({
@@ -929,6 +993,10 @@ class Docker extends Watcher {
             displayIcon,
             triggerInclude,
             triggerExclude,
+            cron: containerCron || undefined,
+            autoUpdate: containerAutoUpdate
+                ? containerAutoUpdate.toLowerCase() === 'true'
+                : false,
             image: {
                 id: imageId,
                 registry: {
@@ -980,13 +1048,37 @@ class Docker extends Watcher {
 
         // Not found in DB? => Save it
         if (!containerInDb) {
-            logContainer.debug('Container watched for the first time');
+            // Check for old entry with same name (container was recreated with new ID)
+            const existingByName = storeContainer.getContainerByName(
+                containerWithResult.watcher,
+                containerWithResult.name,
+            );
+            if (existingByName) {
+                // Preserve user-managed settings from the old container
+                if (existingByName.autoUpdate !== undefined) {
+                    containerWithResult.autoUpdate = existingByName.autoUpdate;
+                }
+                if (existingByName.cron !== undefined) {
+                    containerWithResult.cron = existingByName.cron;
+                }
+                storeContainer.deleteContainer(existingByName.id);
+                logContainer.debug('Container recreated — preserved user settings from previous instance');
+            } else {
+                logContainer.debug('Container watched for the first time');
+            }
             containerReport.container =
                 storeContainer.insertContainer(containerWithResult);
             containerReport.changed = true;
 
             // Found in DB? => update it
         } else {
+            // Preserve user-managed settings (autoUpdate, cron) that may have been set via the UI/API
+            if (containerInDb.autoUpdate !== undefined) {
+                containerWithResult.autoUpdate = containerInDb.autoUpdate;
+            }
+            if (containerInDb.cron !== undefined) {
+                containerWithResult.cron = containerInDb.cron;
+            }
             containerReport.container =
                 storeContainer.updateContainer(containerWithResult);
             containerReport.changed =

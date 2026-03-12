@@ -6,13 +6,13 @@ The `http` trigger lets you send container update notifications via HTTP.
 
 | Env var                                         |    Required    | Description                                       | Supported values             | Default value when missing |
 |-------------------------------------------------|:--------------:|---------------------------------------------------|------------------------------|----------------------------| 
-| `WUD_TRIGGER_HTTP_{trigger_name}_URL`           |  :red_circle:  | The URL of the webhook                            | Valid http or https endpoint |                            |
-| `WUD_TRIGGER_HTTP_{trigger_name}_METHOD`        | :white_circle: | The HTTP method to use                            | `GET`, `POST`                | `POST`                     |
-| `WUD_TRIGGER_HTTP_{trigger_name}_AUTH_TYPE`     | :white_circle: | The Auth type (among )                            | `BASIC`, `BEARER`            | `BASIC`                    |
-| `WUD_TRIGGER_HTTP_{trigger_name}_AUTH_USER`     | :white_circle: | The Auth user if BASIC Auth is enabled            |                              |                            |
-| `WUD_TRIGGER_HTTP_{trigger_name}_AUTH_PASSWORD` | :white_circle: | The Auth user password if `BASIC` Auth is enabled |                              |                            |
-| `WUD_TRIGGER_HTTP_{trigger_name}_AUTH_BEARER`   | :white_circle: | The Auth bearer token if `BEARER` Auth is enabled |                              |                            |
-| `WUD_TRIGGER_HTTP_{trigger_name}_PROXY`         | :white_circle: | The HTTP Proxy                                    |                              |                            |
+| `BT_TRIGGER_HTTP_{trigger_name}_URL`           |  :red_circle:  | The URL of the webhook                            | Valid http or https endpoint |                            |
+| `BT_TRIGGER_HTTP_{trigger_name}_METHOD`        | :white_circle: | The HTTP method to use                            | `GET`, `POST`                | `POST`                     |
+| `BT_TRIGGER_HTTP_{trigger_name}_AUTH_TYPE`     | :white_circle: | The Auth type (among )                            | `BASIC`, `BEARER`            | `BASIC`                    |
+| `BT_TRIGGER_HTTP_{trigger_name}_AUTH_USER`     | :white_circle: | The Auth user if BASIC Auth is enabled            |                              |                            |
+| `BT_TRIGGER_HTTP_{trigger_name}_AUTH_PASSWORD` | :white_circle: | The Auth user password if `BASIC` Auth is enabled |                              |                            |
+| `BT_TRIGGER_HTTP_{trigger_name}_AUTH_BEARER`   | :white_circle: | The Auth bearer token if `BEARER` Auth is enabled |                              |                            |
+| `BT_TRIGGER_HTTP_{trigger_name}_PROXY`         | :white_circle: | The HTTP Proxy                                    |                              |                            |
 
 ?> This trigger also supports the [common configuration variables](configuration/triggers/?id=common-trigger-configuration).
 
@@ -28,12 +28,12 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_HTTP_MYREMOTEHOST_URL=https://my-remote-host/new-version
+      - BT_TRIGGER_HTTP_MYREMOTEHOST_URL=https://my-remote-host/new-version
 ```
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_TRIGGER_HTTP_MYREMOTEHOST_URL="https://my-remote-host/new-version" \
+  -e BT_TRIGGER_HTTP_MYREMOTEHOST_URL="https://my-remote-host/new-version" \
   ...
   getwud/wud
 ```

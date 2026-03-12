@@ -9,18 +9,18 @@ The `docker` watcher lets you configure the Docker hosts you want to watch.
 
 | Env var                                                   | Required       | Description                                                                                                            | Supported values                               | Default value when missing                                      |
 | --------------------------------------------------------- |:--------------:| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------- | 
-| `WUD_WATCHER_{watcher_name}_CAFILE`                       | :white_circle: | CA pem file path (only for TLS connection)                                                                             |                                                |                                                                 |
-| `WUD_WATCHER_{watcher_name}_CERTFILE`                     | :white_circle: | Certificate pem file path (only for TLS connection)                                                                    |                                                |                                                                 |
-| `WUD_WATCHER_{watcher_name}_CRON`                         | :white_circle: | Scheduling options                                                                                                     | [Valid CRON expression](https://crontab.guru/) | `0 * * * *` (every hour)                                        |
-| `WUD_WATCHER_{watcher_name}_HOST`                         | :white_circle: | Docker hostname or ip of the host to watch                                                                             |                                                |                                                                 |
-| `WUD_WATCHER_{watcher_name}_JITTER`                       | :white_circle: | Jitter in ms applied to the CRON to better distribute the load on the registries (on the Hub at the first place) | > 0 | `60000` (1 minute)                                              |
-| `WUD_WATCHER_{watcher_name}_KEYFILE`                      | :white_circle: | Key pem file path (only for TLS connection)                                                                            |                                                |                                                                 |
-| `WUD_WATCHER_{watcher_name}_PORT`                         | :white_circle: | Docker port of the host to watch                                                                                       |                                                | `2375`                                                          |
-| `WUD_WATCHER_{watcher_name}_SOCKET`                       | :white_circle: | Docker socket to watch                                                                                                 | Valid unix socket                              | `/var/run/docker.sock`                                          |
-| `WUD_WATCHER_{watcher_name}_WATCHALL`                     | :white_circle: | If WUD must monitor all containers instead of just running ones                                                        | `true`, `false`                                | `false`                                                         |
-| `WUD_WATCHER_{watcher_name}_WATCHATSTART` (deprecated)    | :white_circle: | If WUD must check for image updates during startup                                                                     | `true`, `false`                                | `true` if store is empy                                         |
-| `WUD_WATCHER_{watcher_name}_WATCHBYDEFAULT`               | :white_circle: | If WUD must monitor all containers by default                                                                          | `true`, `false`                                | `true`                                                          |
-| `WUD_WATCHER_{watcher_name}_WATCHEVENTS`                  | :white_circle: | If WUD must monitor docker events                                                                                      | `true`, `false`                                | `true`                                                          |
+| `BT_WATCHER_{watcher_name}_CAFILE`                       | :white_circle: | CA pem file path (only for TLS connection)                                                                             |                                                |                                                                 |
+| `BT_WATCHER_{watcher_name}_CERTFILE`                     | :white_circle: | Certificate pem file path (only for TLS connection)                                                                    |                                                |                                                                 |
+| `BT_WATCHER_{watcher_name}_CRON`                         | :white_circle: | Scheduling options                                                                                                     | [Valid CRON expression](https://crontab.guru/) | `0 * * * *` (every hour)                                        |
+| `BT_WATCHER_{watcher_name}_HOST`                         | :white_circle: | Docker hostname or ip of the host to watch                                                                             |                                                |                                                                 |
+| `BT_WATCHER_{watcher_name}_JITTER`                       | :white_circle: | Jitter in ms applied to the CRON to better distribute the load on the registries (on the Hub at the first place) | > 0 | `60000` (1 minute)                                              |
+| `BT_WATCHER_{watcher_name}_KEYFILE`                      | :white_circle: | Key pem file path (only for TLS connection)                                                                            |                                                |                                                                 |
+| `BT_WATCHER_{watcher_name}_PORT`                         | :white_circle: | Docker port of the host to watch                                                                                       |                                                | `2375`                                                          |
+| `BT_WATCHER_{watcher_name}_SOCKET`                       | :white_circle: | Docker socket to watch                                                                                                 | Valid unix socket                              | `/var/run/docker.sock`                                          |
+| `BT_WATCHER_{watcher_name}_WATCHALL`                     | :white_circle: | If BigTower must monitor all containers instead of just running ones                                                        | `true`, `false`                                | `false`                                                         |
+| `BT_WATCHER_{watcher_name}_WATCHATSTART` (deprecated)    | :white_circle: | If BigTower must check for image updates during startup                                                                     | `true`, `false`                                | `true` if store is empy                                         |
+| `BT_WATCHER_{watcher_name}_WATCHBYDEFAULT`               | :white_circle: | If BigTower must monitor all containers by default                                                                          | `true`, `false`                                | `true`                                                          |
+| `BT_WATCHER_{watcher_name}_WATCHEVENTS`                  | :white_circle: | If BigTower must monitor docker events                                                                                      | `true`, `false`                                | `true`                                                          |
 
 ?> If no watcher is configured, a default one named `local` will be automatically created (reading the Docker socket).
 
@@ -29,7 +29,7 @@ You just need to give them different names.
 
 !> Socket configuration and host/port configuration are mutually exclusive.
 
-!> If socket configuration is used, don't forget to mount the Docker socket on your WUD container.
+!> If socket configuration is used, don't forget to mount the Docker socket on your BigTower container.
 
 !> If host/port configuration is used, don't forget to enable the Docker remote API. \
 [See dockerd documentation](https://docs.docker.com/engine/reference/commandline/dockerd/#description)
@@ -38,9 +38,9 @@ You just need to give them different names.
 [See dockerd documentation](https://docs.docker.com/engine/security/protect-access/#use-tls-https-to-protect-the-docker-daemon-socket)
 
 !> Watching image digests causes an extensive usage of _Docker Registry Pull API_ which is restricted by [**Quotas on the Docker Hub**](https://docs.docker.com/docker-hub/download-rate-limit/). \
-By default, WUD enables it only for **non semver** image tags. \
-You can tune this behavior per container using the `wud.watch.digest` label. \
-If you face [quota related errors](https://docs.docker.com/docker-hub/download-rate-limit/#how-do-i-know-my-pull-requests-are-being-limited), consider slowing down the watcher rate by adjusting the `WUD_WATCHER_{watcher_name}_CRON` variable.
+By default, BigTower enables it only for **non semver** image tags. \
+You can tune this behavior per container using the `bt.watch.digest` label. \
+If you face [quota related errors](https://docs.docker.com/docker-hub/download-rate-limit/#how-do-i-know-my-pull-requests-are-being-limited), consider slowing down the watcher rate by adjusting the `BT_WATCHER_{watcher_name}_CRON` variable.
 
 ## Variable examples
 
@@ -54,13 +54,13 @@ services:
     image: getwud/wud
     ...
     environment:
-        - WUD_WATCHER_LOCAL_CRON=0 1 * * *
+        - BT_WATCHER_LOCAL_CRON=0 1 * * *
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_WATCHER_LOCAL_CRON="0 1 * * *" \
+    -e BT_WATCHER_LOCAL_CRON="0 1 * * *" \
   ...
   getwud/wud
 ```
@@ -76,13 +76,13 @@ services:
     image: getwud/wud
     ...
     environment:
-        - WUD_WATCHER_LOCAL_WATCHALL=true
+        - BT_WATCHER_LOCAL_WATCHALL=true
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_WATCHER_LOCAL_WATCHALL="true" \
+    -e BT_WATCHER_LOCAL_WATCHALL="true" \
   ...
   getwud/wud
 ```
@@ -98,13 +98,13 @@ services:
     image: getwud/wud
     ...
     environment:
-        - WUD_WATCHER_MYREMOTEHOST_HOST=myremotehost 
+        - BT_WATCHER_MYREMOTEHOST_HOST=myremotehost 
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_WATCHER_MYREMOTEHOST_HOST="myremotehost" \
+    -e BT_WATCHER_MYREMOTEHOST_HOST="myremotehost" \
   ...
   getwud/wud
 ```
@@ -120,11 +120,11 @@ services:
     image: getwud/wud
     ...
     environment:
-        - WUD_WATCHER_MYREMOTEHOST_HOST=myremotehost
-        - WUD_WATCHER_MYREMOTEHOST_PORT=2376
-        - WUD_WATCHER_MYREMOTEHOST_CAFILE=/certs/ca.pem
-        - WUD_WATCHER_MYREMOTEHOST_CERTFILE=/certs/cert.pem
-        - WUD_WATCHER_MYREMOTEHOST_KEYFILE=/certs/key.pem
+        - BT_WATCHER_MYREMOTEHOST_HOST=myremotehost
+        - BT_WATCHER_MYREMOTEHOST_PORT=2376
+        - BT_WATCHER_MYREMOTEHOST_CAFILE=/certs/ca.pem
+        - BT_WATCHER_MYREMOTEHOST_CERTFILE=/certs/cert.pem
+        - BT_WATCHER_MYREMOTEHOST_KEYFILE=/certs/key.pem
     volumes:
         - /my-host/my-certs/ca.pem:/certs/ca.pem:ro
         - /my-host/my-certs/ca.pem:/certs/cert.pem:ro
@@ -134,11 +134,11 @@ services:
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_WATCHER_MYREMOTEHOST_HOST="myremotehost" \
-    -e WUD_WATCHER_MYREMOTEHOST_PORT="2376" \
-    -e WUD_WATCHER_MYREMOTEHOST_CAFILE="/certs/ca.pem" \
-    -e WUD_WATCHER_MYREMOTEHOST_CERTFILE="/certs/cert.pem" \
-    -e WUD_WATCHER_MYREMOTEHOST_KEYFILE="/certs/key.pem" \
+    -e BT_WATCHER_MYREMOTEHOST_HOST="myremotehost" \
+    -e BT_WATCHER_MYREMOTEHOST_PORT="2376" \
+    -e BT_WATCHER_MYREMOTEHOST_CAFILE="/certs/ca.pem" \
+    -e BT_WATCHER_MYREMOTEHOST_CERTFILE="/certs/cert.pem" \
+    -e BT_WATCHER_MYREMOTEHOST_KEYFILE="/certs/key.pem" \
     -v /my-host/my-certs/ca.pem:/certs/ca.pem:ro \
     -v /my-host/my-certs/ca.pem:/certs/cert.pem:ro \
     -v /my-host/my-certs/ca.pem:/certs/key.pem:ro \
@@ -159,17 +159,17 @@ services:
     image: getwud/wud
     ...
     environment:
-        -  WUD_WATCHER_LOCAL_SOCKET=/var/run/docker.sock
-        -  WUD_WATCHER_MYREMOTEHOST1_HOST=myremotehost1
-        -  WUD_WATCHER_MYREMOTEHOST2_HOST=myremotehost2
+        -  BT_WATCHER_LOCAL_SOCKET=/var/run/docker.sock
+        -  BT_WATCHER_MYREMOTEHOST1_HOST=myremotehost1
+        -  BT_WATCHER_MYREMOTEHOST2_HOST=myremotehost2
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e  WUD_WATCHER_LOCAL_SOCKET="/var/run/docker.sock" \
-    -e  WUD_WATCHER_MYREMOTEHOST1_HOST="myremotehost1" \
-    -e  WUD_WATCHER_MYREMOTEHOST2_HOST="myremotehost2" \
+    -e  BT_WATCHER_LOCAL_SOCKET="/var/run/docker.sock" \
+    -e  BT_WATCHER_MYREMOTEHOST1_HOST="myremotehost1" \
+    -e  BT_WATCHER_MYREMOTEHOST2_HOST="myremotehost2" \
   ...
   getwud/wud
 ```
@@ -177,25 +177,25 @@ docker run \
 
 ## Labels
 
-To fine-tune the behaviour of WUD _per container_, you can add labels on them.
+To fine-tune the behaviour of BigTower _per container_, you can add labels on them.
 
 | Label                 |    Required    | Description                                        | Supported values                                                                                                                                                            | Default value when missing                                                            |
 |-----------------------|:--------------:|----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
-| `wud.display.icon`    | :white_circle: | Custom display icon for the container              | Valid [Material Design Icon](https://materialdesignicons.com/), [Fontawesome Icon](https://fontawesome.com/) or [Simple icon](https://simpleicons.org/) (see details below) | `mdi:docker`                                                                          |
-| `wud.display.name`    | :white_circle: | Custom display name for the container              | Valid String                                                                                                                                                                | Container name                                                                        |
-| `wud.link.template`   | :white_circle: | Browsable link associated to the container version | JS string template with vars `${container}`, `${original}`, `${transformed}`, `${major}`, `${minor}`, `${patch}`, `${prerelease}`                                           |                                                                                       |
-| `wud.tag.exclude`     | :white_circle: | Regex to exclude specific tags                     | Valid JavaScript Regex                                                                                                                                                      |                                                                                       |
-| `wud.tag.include`     | :white_circle: | Regex to include specific tags only                | Valid JavaScript Regex                                                                                                                                                      |                                                                                       |
-| `wud.tag.transform`   | :white_circle: | Transform function to apply to the tag             | `$valid_regex => $valid_string_with_placeholders` (see below)                                                                                                               |                                                                                       |
-| `wud.trigger.exclude` | :white_circle: | Optional list of triggers to exclude               | `$trigger_1_id,$trigger_2_id:$threshold`                                                                                                                                    |                                                                                       |
-| `wud.trigger.include` | :white_circle: | Optional list of triggers to include               | `$trigger_1_id,$trigger_2_id:$threshold`                                                                                                                                    |                                                                                       |
-| `wud.watch.digest`    | :white_circle: | Watch this container digest                        | Valid Boolean                                                                                                                                                               | `false`                                                                               |
-| `wud.watch`           | :white_circle: | Watch this container                               | Valid Boolean                                                                                                                                                               | `true` when `WUD_WATCHER_{watcher_name}_WATCHBYDEFAULT` is `true` (`false` otherwise) |
+| `bt.display.icon`    | :white_circle: | Custom display icon for the container              | Valid [Material Design Icon](https://materialdesignicons.com/), [Fontawesome Icon](https://fontawesome.com/) or [Simple icon](https://simpleicons.org/) (see details below) | `mdi:docker`                                                                          |
+| `bt.display.name`    | :white_circle: | Custom display name for the container              | Valid String                                                                                                                                                                | Container name                                                                        |
+| `bt.link.template`   | :white_circle: | Browsable link associated to the container version | JS string template with vars `${container}`, `${original}`, `${transformed}`, `${major}`, `${minor}`, `${patch}`, `${prerelease}`                                           |                                                                                       |
+| `bt.tag.exclude`     | :white_circle: | Regex to exclude specific tags                     | Valid JavaScript Regex                                                                                                                                                      |                                                                                       |
+| `bt.tag.include`     | :white_circle: | Regex to include specific tags only                | Valid JavaScript Regex                                                                                                                                                      |                                                                                       |
+| `bt.tag.transform`   | :white_circle: | Transform function to apply to the tag             | `$valid_regex => $valid_string_with_placeholders` (see below)                                                                                                               |                                                                                       |
+| `bt.trigger.exclude` | :white_circle: | Optional list of triggers to exclude               | `$trigger_1_id,$trigger_2_id:$threshold`                                                                                                                                    |                                                                                       |
+| `bt.trigger.include` | :white_circle: | Optional list of triggers to include               | `$trigger_1_id,$trigger_2_id:$threshold`                                                                                                                                    |                                                                                       |
+| `bt.watch.digest`    | :white_circle: | Watch this container digest                        | Valid Boolean                                                                                                                                                               | `false`                                                                               |
+| `bt.watch`           | :white_circle: | Watch this container                               | Valid Boolean                                                                                                                                                               | `true` when `BT_WATCHER_{watcher_name}_WATCHBYDEFAULT` is `true` (`false` otherwise) |
 
 ## Label examples
 
 ### Include specific containers to watch
-Configure WUD to disable WATCHBYDEFAULT feature.
+Configure BigTower to disable WATCHBYDEFAULT feature.
 <!-- tabs:start -->
 #### **Docker Compose**
 ```yaml
@@ -204,19 +204,19 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_WATCHER_LOCAL_WATCHBYDEFAULT=false
+      - BT_WATCHER_LOCAL_WATCHBYDEFAULT=false
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_WATCHER_LOCAL_WATCHBYDEFAULT="false" \
+    -e BT_WATCHER_LOCAL_WATCHBYDEFAULT="false" \
   ...
   getwud/wud
 ```
 <!-- tabs:end -->
 
-Then add the `wud.watch=true` label on the containers you want to watch.
+Then add the `bt.watch=true` label on the containers you want to watch.
 <!-- tabs:start -->
 #### **Docker Compose**
 ```yaml
@@ -225,19 +225,19 @@ services:
     image: mariadb:10.4.5
     ...
     labels:
-      - wud.watch=true
+      - bt.watch=true
 ```
 
 #### **Docker**
 ```bash
-docker run -d --name mariadb --label wud.watch=true mariadb:10.4.5
+docker run -d --name mariadb --label bt.watch=true mariadb:10.4.5
 ```
 <!-- tabs:end -->
 
 ### Exclude specific containers to watch
-Ensure `WUD_WATCHER_{watcher_name}_WATCHBYDEFAULT` is true (default value).
+Ensure `BT_WATCHER_{watcher_name}_WATCHBYDEFAULT` is true (default value).
 
-Then add the `wud.watch=false` label on the containers you want to exclude from being watched.
+Then add the `bt.watch=false` label on the containers you want to exclude from being watched.
 <!-- tabs:start -->
 #### **Docker Compose**
 ```yaml
@@ -246,12 +246,12 @@ services:
     image: mariadb:10.4.5
     ...
     labels:
-      - wud.watch=false
+      - bt.watch=false
 ```
 
 #### **Docker**
 ```bash
-docker run -d --name mariadb --label wud.watch=false mariadb:10.4.5
+docker run -d --name mariadb --label bt.watch=false mariadb:10.4.5
 ```
 <!-- tabs:end -->
 
@@ -267,12 +267,12 @@ services:
   mariadb:
     image: mariadb:10.4.5
     labels:
-      - wud.tag.include=^\d+\.\d+\.\d+$$
+      - bt.tag.include=^\d+\.\d+\.\d+$$
 ```
 
 #### **Docker**
 ```bash
-docker run -d --name mariadb --label 'wud.tag.include=^\d+\.\d+\.\d+$' mariadb:10.4.5
+docker run -d --name mariadb --label 'bt.tag.include=^\d+\.\d+\.\d+$' mariadb:10.4.5
 ```
 <!-- tabs:end -->
 
@@ -280,7 +280,7 @@ docker run -d --name mariadb --label 'wud.tag.include=^\d+\.\d+\.\d+$' mariadb:1
 In certain cases, tag values are so badly formatted that the resolution algorithm cannot find any valid update candidates or, worst, find bad positive matches.
 
 For example, you can encounter such an issue if you need to deal with tags looking like `1.0.0-99-7b368146`, `1.0.0-273-21d7efa6`...  
-By default, WUD will report bad positive matches because of the `sha-1` part at the end of the tag value (`-7b368146`...).  
+By default, BigTower will report bad positive matches because of the `sha-1` part at the end of the tag value (`-7b368146`...).  
 That's a shame because `1.0.0-99` and `1.0.0-273` would have been valid semver values (`$major.$minor.$patch-$prerelease`).
 
 You can get around this issue by providing a function that keeps only the part you are interested in.  
@@ -309,15 +309,15 @@ services:
   searx:
     image: searx/searx:1.0.0-269-7b368146
     labels:
-      - wud.tag.include=^\d+\.\d+\.\d+-\d+-.*$$
-      - wud.tag.transform=^(\d+\.\d+\.\d+-\d+)-.*$$ => $$1
+      - bt.tag.include=^\d+\.\d+\.\d+-\d+-.*$$
+      - bt.tag.transform=^(\d+\.\d+\.\d+-\d+)-.*$$ => $$1
 ```
 
 #### **Docker**
 ```bash
 docker run -d --name searx \
---label 'wud.tag.include=^\d+\.\d+\.\d+-\d+-.*$' \
---label 'wud.tag.transform=^(\d+\.\d+\.\d+-\d+)-.*$ => $1' \
+--label 'bt.tag.include=^\d+\.\d+\.\d+-\d+-.*$' \
+--label 'bt.tag.transform=^(\d+\.\d+\.\d+-\d+)-.*$ => $1' \
 searx/searx:1.0.0-269-7b368146
 ```
 <!-- tabs:end -->
@@ -334,12 +334,12 @@ services:
   mariadb:
     image: mariadb:10
     labels:
-      - wud.tag.include=^\d+$$
-      - wud.watch.digest=true
+      - bt.tag.include=^\d+$$
+      - bt.watch.digest=true
 ```
 #### **Docker**
 ```bash
-docker run -d --name mariadb --label 'wud.tag.include=^\d+$' --label wud.watch.digest=true mariadb:10
+docker run -d --name mariadb --label 'bt.tag.include=^\d+$' --label bt.watch.digest=true mariadb:10
 ```
 <!-- tabs:end -->
 
@@ -351,7 +351,7 @@ you would specify a template like `https://mariadb.com/kb/en/mariadb-${major}${m
 
 The available variables are:
 - `${original}` the original unparsed tag
-- `${transformed}` the original unparsed tag transformed with the optional `wud.tag.transform` label option
+- `${transformed}` the original unparsed tag transformed with the optional `bt.tag.transform` label option
 - `${major}` the major version (if tag value is semver)
 - `${minor}` the minor version (if tag value is semver)
 - `${patch}` the patch version (if tag value is semver)
@@ -365,12 +365,12 @@ services:
   mariadb:
     image: mariadb:10.6.4
     labels:
-      - wud.link.template=https://mariadb.com/kb/en/mariadb-$${major}$${minor}$${patch}-changelog
+      - bt.link.template=https://mariadb.com/kb/en/mariadb-$${major}$${minor}$${patch}-changelog
 ```
 
 #### **Docker**
 ```bash
-docker run -d --name mariadb --label 'wud.link.template=https://mariadb.com/kb/en/mariadb-${major}${minor}${patch}-changelog' mariadb:10
+docker run -d --name mariadb --label 'bt.link.template=https://mariadb.com/kb/en/mariadb-${major}${minor}${patch}-changelog' mariadb:10
 ```
 <!-- tabs:end -->
 
@@ -396,13 +396,13 @@ services:
   mariadb:
     image: mariadb:10.6.4
     labels:
-      - wud.display.name=Maria DB
-      - wud.display.icon=si:mariadb
+      - bt.display.name=Maria DB
+      - bt.display.icon=si:mariadb
 ```
 
 #### **Docker**
 ```bash
-docker run -d --name mariadb --label 'wud.display.name=Maria DB' --label 'wud.display.icon=mdi-database' mariadb:10.6.4
+docker run -d --name mariadb --label 'bt.display.name=Maria DB' --label 'bt.display.icon=mdi-database' mariadb:10.6.4
 ```
 <!-- tabs:end -->
 
@@ -419,16 +419,16 @@ services:
   my_important_service:
     image: my_important_service:1.0.0
     labels:
-      - wud.trigger.include=smtp.gmail,dockercompose.local:minor
+      - bt.trigger.include=smtp.gmail,dockercompose.local:minor
 ```
 
 #### **Docker**
 ```bash
-docker run -d --name my_important_service --label 'wud.trigger.include=smtp.gmail,dockercompose.local:minor' my_important_service:1.0.0
+docker run -d --name my_important_service --label 'bt.trigger.include=smtp.gmail,dockercompose.local:minor' my_important_service:1.0.0
 ```
 <!-- tabs:end -->
 
-?> `wud.trigger.include=smtp.gmail` is a shorthand for `wud.trigger.include=smtp.gmail:all`
+?> `bt.trigger.include=smtp.gmail` is a shorthand for `bt.trigger.include=smtp.gmail:all`
 
 ?> Threshold `all` means that the trigger will run regardless of the nature of the change
 

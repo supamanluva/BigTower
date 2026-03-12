@@ -507,7 +507,7 @@ describe('Docker Watcher', () => {
             const containers = [
                 {
                     Id: '123',
-                    Labels: { 'wud.watch': 'true' },
+                    Labels: { 'bt.watch': 'true' },
                     Names: ['/test'],
                 },
             ];
@@ -540,10 +540,10 @@ describe('Docker Watcher', () => {
 
         test('should filter containers based on watch label', async () => {
             const containers = [
-                { Id: '1', Labels: { 'wud.watch': 'true' }, Names: ['/test1'] },
+                { Id: '1', Labels: { 'bt.watch': 'true' }, Names: ['/test1'] },
                 {
                     Id: '2',
-                    Labels: { 'wud.watch': 'false' },
+                    Labels: { 'bt.watch': 'false' },
                     Names: ['/test2'],
                 },
                 { Id: '3', Labels: {}, Names: ['/test3'] },
@@ -1180,7 +1180,7 @@ describe('isDigestToWatch Logic', () => {
     // Case 1: Explicit Label present
     test('should watch digest if label is true (semver)', async () => {
         const container = await setupTest(
-            { 'wud.watch.digest': 'true' },
+            { 'bt.watch.digest': 'true' },
             'my.registry',
             '1.0.0',
             true,
@@ -1191,7 +1191,7 @@ describe('isDigestToWatch Logic', () => {
 
     test('should watch digest if label is true (non-semver)', async () => {
         const container = await setupTest(
-            { 'wud.watch.digest': 'true' },
+            { 'bt.watch.digest': 'true' },
             'my.registry',
             'latest',
             false,
@@ -1202,7 +1202,7 @@ describe('isDigestToWatch Logic', () => {
 
     test('should NOT watch digest if label is false (semver)', async () => {
         const container = await setupTest(
-            { 'wud.watch.digest': 'false' },
+            { 'bt.watch.digest': 'false' },
             'my.registry',
             '1.0.0',
             true,
@@ -1213,7 +1213,7 @@ describe('isDigestToWatch Logic', () => {
 
     test('should NOT watch digest if label is false (non-semver)', async () => {
         const container = await setupTest(
-            { 'wud.watch.digest': 'false' },
+            { 'bt.watch.digest': 'false' },
             'my.registry',
             'latest',
             false,

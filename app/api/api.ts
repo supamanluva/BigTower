@@ -19,11 +19,17 @@ import * as auth from './auth';
 export function init() {
     const router = express.Router();
 
-    // Mount app router
-    router.use('/app', appRouter.init());
-
     // Routes to protect after this line
-    router.use(passport.authenticate(auth.getAllIds()));
+    // Check session first to avoid passport.authenticate() regenerating the session
+    router.use((req, res, next) => {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        passport.authenticate(auth.getAllIds())(req, res, next);
+    });
+
+    // Mount app router (behind auth)
+    router.use('/app', appRouter.init());
 
     // Mount log router
     router.use('/log', logRouter.init());

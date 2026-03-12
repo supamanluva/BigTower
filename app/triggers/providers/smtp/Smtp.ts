@@ -7,7 +7,7 @@ import Trigger from '../Trigger';
  */
 class Smtp extends Trigger {
     static fromDeprecationWarningMessage =
-        'WUD_TRIGGER_SMTP_[trigger_name]_FROM is deprecated, use WUD_TRIGGER_SMTP_[trigger_name]_FROM_ADDRESS instead';
+        'BT_TRIGGER_SMTP_[trigger_name]_FROM is deprecated, use BT_TRIGGER_SMTP_[trigger_name]_FROM_ADDRESS instead';
 
     /**
      * Get the Trigger configuration schema.

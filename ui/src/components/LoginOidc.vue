@@ -1,11 +1,9 @@
 <template>
   <v-form @keyup.enter="redirect">
-    <v-card-text>
-      <v-btn block color="primary" @click="redirect">
-        <v-icon color="warning">mdi-openid</v-icon>
-        &nbsp;Connect
-      </v-btn>
-    </v-card-text>
+    <v-btn block color="secondary" size="large" @click="redirect" rounded="lg">
+      <v-icon start>mdi-openid</v-icon>
+      Sign in with OpenID Connect
+    </v-btn>
   </v-form>
 </template>
 

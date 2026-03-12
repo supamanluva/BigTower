@@ -1,7 +1,9 @@
 <template>
-  <v-footer app padless dark height="30px">
-    <v-col cols="12" class="text-center text-caption pa-0">
-      {{ new Date().getFullYear() }} — WUD (version {{ version }})
+  <v-footer app height="36px" class="border-t">
+    <v-col cols="12" class="text-center text-caption pa-0 text-medium-emphasis">
+      BigTower v{{ version }}
+      <span class="mx-1">·</span>
+      Fork of <a href="https://github.com/getwud/wud" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-secondary">WUD</a>
     </v-col>
   </v-footer>
 </template>

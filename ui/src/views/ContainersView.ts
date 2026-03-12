@@ -1,12 +1,10 @@
 import ContainerItem from "@/components/ContainerItem.vue";
-import ContainerFilter from "@/components/ContainerFilter.vue";
-import { deleteContainer, getAllContainers } from "@/services/container";
+import { deleteContainer, getAllContainers, refreshAllContainers } from "@/services/container";
 import { defineComponent } from "vue";
 
 export default defineComponent({
   components: {
     ContainerItem,
-    ContainerFilter,
   },
 
   data() {
@@ -18,9 +16,13 @@ export default defineComponent({
       updateAvailableSelected: false,
       groupByLabel: "",
       oldestFirst: false,
+      searchQuery: "",
+      loading: true,
+      isRefreshing: false,
+      showAdvancedFilters: false,
     };
   },
-  watch: {},
+
   computed: {
     allContainerLabels() {
       const allLabels = this.containers.reduce((acc, container) => {
@@ -57,7 +59,16 @@ export default defineComponent({
       ];
     },
     containersFiltered() {
+      const query = (this.searchQuery || "").toLowerCase().trim();
       const filteredContainers = this.containers
+        .filter((container) =>
+          query
+            ? container.displayName.toLowerCase().includes(query) ||
+              container.name.toLowerCase().includes(query) ||
+              container.image?.name?.toLowerCase().includes(query) ||
+              container.image?.tag?.value?.toLowerCase().includes(query)
+            : true,
+        )
         .filter((container) =>
           this.registrySelected
             ? this.registrySelected === container.image.registry.name
@@ -103,11 +114,11 @@ export default defineComponent({
 
   methods: {
     onRegistryChanged(registrySelected: string) {
-      this.registrySelected = registrySelected;
+      this.registrySelected = registrySelected ?? "";
       this.updateQueryParams();
     },
     onWatcherChanged(watcherSelected: string) {
-      this.watcherSelected = watcherSelected;
+      this.watcherSelected = watcherSelected ?? "";
       this.updateQueryParams();
     },
     onUpdateAvailableChanged() {
@@ -119,11 +130,11 @@ export default defineComponent({
       this.updateQueryParams();
     },
     onGroupByLabelChanged(groupByLabel: string) {
-      this.groupByLabel = groupByLabel;
+      this.groupByLabel = groupByLabel ?? "";
       this.updateQueryParams();
     },
     onUpdateKindChanged(updateKindSelected: string) {
-      this.updateKindSelected = updateKindSelected;
+      this.updateKindSelected = updateKindSelected ?? "";
       this.updateQueryParams();
     },
     updateQueryParams() {
@@ -148,8 +159,21 @@ export default defineComponent({
       }
       this.$router.push({ query });
     },
-    onRefreshAllContainers(containersRefreshed: any[]) {
-      this.containers = containersRefreshed;
+    async onRefreshAllContainersClick() {
+      this.isRefreshing = true;
+      try {
+        const body = await refreshAllContainers();
+        (this as any).$eventBus.emit("notify", "All containers refreshed");
+        this.containers = body;
+      } catch (e: any) {
+        (this as any).$eventBus.emit(
+          "notify",
+          `Error when trying to refresh all containers (${e.message})`,
+          "error",
+        );
+      } finally {
+        this.isRefreshing = false;
+      }
     },
     removeContainerFromList(container: any) {
       this.containers = this.containers.filter((c) => c.id !== container.id);
@@ -197,9 +221,11 @@ export default defineComponent({
           vm.groupByLabel = groupByLabel;
         }
         vm.containers = containers;
+        vm.loading = false;
       });
     } catch (e: any) {
       next((vm: any) => {
+        vm.loading = false;
         vm.$eventBus.emit(
           "notify",
           `Error when trying to get the containers (${e.message})`,

@@ -7,7 +7,7 @@ import * as api from './api';
 import * as prometheus from './prometheus';
 
 async function main() {
-    log.info(`WUD is starting (version = ${getVersion()})`);
+    log.info(`BigTower is starting (version = ${getVersion()})`);
 
     // Init store
     await store.init();

@@ -48,7 +48,7 @@ describe('Main Application', () => {
         // Verify initialization order and calls
         expect(getVersion).toHaveBeenCalled();
         expect(log.info).toHaveBeenCalledWith(
-            'WUD is starting (version = 1.0.0)',
+            'BigTower is starting (version = 1.0.0)',
         );
         expect(store.init).toHaveBeenCalled();
         expect(prometheus.init).toHaveBeenCalled();

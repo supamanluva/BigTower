@@ -1,6 +1,7 @@
+import { apiFetchJson } from "@/services/api";
+
 async function getAppInfos() {
-  const response = await fetch("/api/app", { credentials: "include" });
-  return response.json();
+  return apiFetchJson("/api/app");
 }
 
 export { getAppInfos };

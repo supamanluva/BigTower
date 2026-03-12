@@ -157,10 +157,11 @@ class Trigger extends Component {
      * @returns {Promise<void>}
      */
     async handleContainerReport(containerReport: ContainerReport) {
-        // Filter on changed containers with update available and passing trigger threshold
+        // Filter on changed containers with update available, autoUpdate enabled, and passing trigger threshold
         if (
             (containerReport.changed || !this.configuration.once) &&
-            containerReport.container.updateAvailable
+            containerReport.container.updateAvailable &&
+            containerReport.container.autoUpdate
         ) {
             const logContainer =
                 this.log.child({
@@ -222,6 +223,10 @@ class Trigger extends Component {
                 .filter(
                     (containerReport) =>
                         containerReport.container.updateAvailable,
+                )
+                .filter(
+                    (containerReport) =>
+                        containerReport.container.autoUpdate,
                 )
                 .filter((containerReport) =>
                     this.mustTrigger(containerReport.container),

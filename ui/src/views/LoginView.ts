@@ -2,7 +2,6 @@ import { inject, defineComponent } from "vue";
 import { getOidcRedirection, getStrategies } from "@/services/auth";
 import LoginBasic from "@/components/LoginBasic.vue";
 import LoginOidc from "@/components/LoginOidc.vue";
-import logo from "@/assets/wud-logo.svg";
 
 export default defineComponent({
   components: {
@@ -17,7 +16,6 @@ export default defineComponent({
   },
   data() {
     return {
-      logo,
       strategies: [] as any[],
       strategySelected: 0,
       showDialog: true,

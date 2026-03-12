@@ -4,6 +4,7 @@ import https from 'https';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import helmet from 'helmet';
 import logger from '../log';
 const log = logger.child({ component: 'api' });
 import * as auth from './auth';
@@ -37,6 +38,15 @@ export async function init() {
             value === undefined ? null : value,
         );
 
+        // Security headers
+        app.use(helmet({
+            contentSecurityPolicy: false, // Let the SPA handle its own CSP
+            crossOriginEmbedderPolicy: false,
+        }));
+
+        // Limit request body size
+        app.use(bodyParser.json({ limit: '1mb' }));
+
         if (configuration.cors.enabled) {
             log.warn(
                 `CORS is enabled, please make sure that the provided configuration is not a security breech (${JSON.stringify(configuration.cors)})`,
@@ -51,9 +61,6 @@ export async function init() {
 
         // Init auth
         auth.init(app);
-
-        // Parse json payloads
-        app.use(bodyParser.json());
 
         // Mount Healthcheck
         app.use('/health', healthRouter.init());

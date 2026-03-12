@@ -30,7 +30,14 @@ export default defineComponent({
           this.closeSnackbar();
         }
       }
-    }
+    },
+    snackbarColor() {
+      switch (this.level) {
+        case "error": return "error";
+        case "warning": return "warning";
+        default: return "secondary";
+      }
+    },
   },
 
   methods: {

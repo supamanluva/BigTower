@@ -31,17 +31,8 @@ export default defineComponent({
     const snackbarShow = ref(false);
     const snackbarLevel = ref("info");
     const user = ref(undefined);
-
-    const items = computed(() => {
-      return route.fullPath
-        .replace("/", "")
-        .split("/")
-        .map((item) => ({
-          text: item ? item : "Home",
-          disabled: false,
-          href: "",
-        }));
-    });
+    const loading = ref(false);
+    let serverConfigLoaded = false;
 
     const authenticated = computed(() => {
       return user.value !== undefined;
@@ -62,10 +53,15 @@ export default defineComponent({
       snackbarShow.value = false;
     };
 
+    const setLoading = (value: boolean) => {
+      loading.value = value;
+    };
+
     onMounted(async () => {
       eventBus.on("authenticated", onAuthenticated);
       eventBus.on("notify", notify);
       eventBus.on("notify:close", notifyClose);
+      eventBus.on("loading", setLoading);
     });
 
     // Watch route changes to clear user on login page and check auth state
@@ -73,7 +69,6 @@ export default defineComponent({
       if (newRoute.name === 'login') {
         user.value = undefined;
       } else if (!user.value) {
-        // Fallback auth check if user not set by router guard
         try {
           const response = await fetch("/auth/user", {
             credentials: "include",
@@ -93,12 +88,17 @@ export default defineComponent({
     onUpdated(async () => {
       if (
         authenticated.value &&
-        instance &&
-        !instance.appContext.config.globalProperties.$serverConfig
+        !serverConfigLoaded &&
+        instance
       ) {
-        const server = await getServer();
-        instance.appContext.config.globalProperties.$serverConfig =
-          server.configuration;
+        serverConfigLoaded = true;
+        try {
+          const server = await getServer();
+          instance.appContext.config.globalProperties.$serverConfig =
+            server.configuration;
+        } catch (e) {
+          serverConfigLoaded = false;
+        }
       }
     });
 
@@ -107,7 +107,7 @@ export default defineComponent({
       snackbarShow,
       snackbarLevel,
       user,
-      items,
+      loading,
       authenticated,
     };
   },

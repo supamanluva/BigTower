@@ -3,8 +3,8 @@
 jest.mock('../store/app', () => ({
     getAppInfos: jest.fn(() => ({
         version: '1.0.0',
-        name: 'wud',
-        description: "What's up Docker?",
+        name: 'bigtower',
+        description: "BigTower",
     })),
 }));
 
@@ -50,8 +50,8 @@ describe('App Router', () => {
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.json).toHaveBeenCalledWith({
             version: '1.0.0',
-            name: 'wud',
-            description: "What's up Docker?",
+            name: 'bigtower',
+            description: "BigTower",
         });
     });
 });

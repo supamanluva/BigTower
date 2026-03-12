@@ -12,11 +12,11 @@ echo "🧪 Running complete e2e test suite..."
 # Setup test containers
 "$SCRIPT_DIR/setup-test-containers.sh"
 
-# Build WUD
-"$SCRIPT_DIR/build-wud.sh"
+# Build BigTower
+"$SCRIPT_DIR/build-bigtower.sh"
 
-# Start WUD
-"$SCRIPT_DIR/start-wud.sh"
+# Start BigTower
+"$SCRIPT_DIR/start-bigtower.sh"
 
 # Run e2e tests
 echo "🏃 Running cucumber tests..."

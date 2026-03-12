@@ -8,10 +8,10 @@ The `telegram` trigger lets you send realtime notifications using [Telegram](htt
 
 | Env var                                        | Required       | Description   | Supported values                                                                                   | Default value when missing  |
 |------------------------------------------------|:--------------:|---------------| -------------------------------------------------------------------------------------------------- |-----------------------------|
-| `WUD_TRIGGER_TELEGRAM_{trigger_name}_BOTTOKEN` | :red_circle:   | The Bot token |                                                                                                    |                             |
-| `WUD_TRIGGER_TELEGRAM_{trigger_name}_CHATID`   | :red_circle:   | The Chat ID   |                                                                                                    |                             |
-| `WUD_TRIGGER_TELEGRAM_{trigger_name}_DISABLETITLE`   |  :white_circle:  | Disable title to have full control over the message formatting   |    `true`, `false`| `false`  |
-| `WUD_TRIGGER_TELEGRAM_{trigger_name}_MESSAGEFORMAT`   | :white_circle: | Send the message as markdown or as html (useful for custom message formatting) | `Markdown`, `HTML`  | `Markdown` |
+| `BT_TRIGGER_TELEGRAM_{trigger_name}_BOTTOKEN` | :red_circle:   | The Bot token |                                                                                                    |                             |
+| `BT_TRIGGER_TELEGRAM_{trigger_name}_CHATID`   | :red_circle:   | The Chat ID   |                                                                                                    |                             |
+| `BT_TRIGGER_TELEGRAM_{trigger_name}_DISABLETITLE`   |  :white_circle:  | Disable title to have full control over the message formatting   |    `true`, `false`| `false`  |
+| `BT_TRIGGER_TELEGRAM_{trigger_name}_MESSAGEFORMAT`   | :white_circle: | Send the message as markdown or as html (useful for custom message formatting) | `Markdown`, `HTML`  | `Markdown` |
 
 ?> This trigger also supports the [common configuration variables](configuration/triggers/?id=common-trigger-configuration).
 
@@ -27,16 +27,16 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_TELEGRAM_1_BOTTOKEN=0123456789:AApFzFLD0g0NVg8l0bZf55ex3sajC4Aw84Q
-      - WUD_TRIGGER_TELEGRAM_1_CHATID=9876543210
+      - BT_TRIGGER_TELEGRAM_1_BOTTOKEN=0123456789:AApFzFLD0g0NVg8l0bZf55ex3sajC4Aw84Q
+      - BT_TRIGGER_TELEGRAM_1_CHATID=9876543210
 ```
 
 #### **Docker**
 
 ```bash
 docker run \
-  -e WUD_TRIGGER_TELEGRAM_1_BOTTOKEN="0123456789:AApFzFLD0g0NVg8l0bZf55ex3sajC4Aw84Q" \
-  -e WUD_TRIGGER_TELEGRAM_1_CHATID="9876543210" \
+  -e BT_TRIGGER_TELEGRAM_1_BOTTOKEN="0123456789:AApFzFLD0g0NVg8l0bZf55ex3sajC4Aw84Q" \
+  -e BT_TRIGGER_TELEGRAM_1_CHATID="9876543210" \
   ...
   getwud/wud
 ```

@@ -1,0 +1,98 @@
+services:
+  # ============================================
+  # BigTower
+  # ============================================
+  bigtower:
+    image: bigtower:local
+    container_name: bigtower
+    ports:
+      - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - bt-store:/store
+    environment:
+      # Watcher config - check every 2 minutes for quick testing
+      - BT_WATCHER_LOCAL_CRON=*/2 * * * *
+      - BT_WATCHER_LOCAL_WATCHBYDEFAULT=false
+      # Basic auth for testing
+      - BT_AUTH_BASIC_JOHN_USER=admin
+      - BT_AUTH_BASIC_JOHN_HASH={SHA}0DPiKuNIrrVmD8IUCuw1hQxNqZc=
+      # Docker trigger for auto-update
+      - BT_TRIGGER_DOCKER_LOCAL_PRUNE=true
+      # App version
+      - BT_VERSION=1.0.0
+    labels:
+      - bt.watch=false
+
+  # ============================================
+  # Test containers with INTENTIONALLY OLD versions
+  # These should all show "update available"
+  # ============================================
+
+  # Old Alpine (3.17 is old, latest is 3.21+)
+  alpine-old:
+    image: alpine:3.17
+    container_name: test-alpine-old
+    command: ["sleep", "infinity"]
+    labels:
+      - bt.watch=true
+      - bt.display.name=Alpine Linux
+      - bt.display.icon=mdi:linux
+      - bt.tag.include=^3\.\d+$$
+      - bt.tag.exclude=(edge|rc)
+      - bt.autoupdate=true
+      - bt.cron=*/5 * * * *
+
+  # Old Nginx (1.24 is old, latest stable is 1.27+)
+  nginx-old:
+    image: nginx:1.24.0
+    container_name: test-nginx-old
+    labels:
+      - bt.watch=true
+      - bt.display.name=Web Server (Nginx)
+      - bt.display.icon=mdi:web
+      - bt.tag.include=^1\.\d+\.\d+$$
+      - bt.tag.exclude=(alpine|perl|slim)
+      - bt.autoupdate=true
+      - bt.cron=*/5 * * * *
+
+  # Old Redis (7.0 is old, current is 7.4+)
+  redis-old:
+    image: redis:7.0.0
+    container_name: test-redis-old
+    labels:
+      - bt.watch=true
+      - bt.display.name=Redis Cache
+      - bt.display.icon=mdi:database
+      - bt.tag.include=^7\.\d+\.\d+$$
+      - bt.tag.exclude=(alpine|bookworm|bullseye)
+      - bt.autoupdate=true
+      - bt.cron=*/5 * * * *
+
+  # Old Traefik (2.9 is old, current is 3.3+)
+  traefik-old:
+    image: traefik:v2.9.10
+    container_name: test-traefik-old
+    command: ["--api.insecure=true"]
+    labels:
+      - bt.watch=true
+      - bt.display.name=Traefik Proxy
+      - bt.display.icon=mdi:server-network
+      - bt.tag.include=^v2\.\d+\.\d+$$
+      - bt.autoupdate=true
+      - bt.cron=*/5 * * * *
+
+  # Old BusyBox (1.35 is old, latest is 1.37+)
+  busybox-old:
+    image: busybox:1.35.0
+    container_name: test-busybox-old
+    command: ["sleep", "3600"]
+    labels:
+      - bt.watch=true
+      - bt.display.name=BusyBox Utility
+      - bt.display.icon=mdi:console
+      - bt.autoupdate=true
+      - bt.cron=*/5 * * * *
+
+volumes:
+  bt-store:

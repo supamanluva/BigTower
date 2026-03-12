@@ -4,13 +4,13 @@ FROM node:24-alpine AS base
 LABEL maintainer="fmartinou"
 EXPOSE 3000
 
-ARG WUD_VERSION=unknown
+ARG BT_VERSION=unknown
 
 ENV WORKDIR=/home/node/app
-ENV WUD_LOG_FORMAT=text
-ENV WUD_VERSION=$WUD_VERSION
+ENV BT_LOG_FORMAT=text
+ENV BT_VERSION=$BT_VERSION
 
-HEALTHCHECK --interval=30s --timeout=5s CMD if [[ -z ${WUD_SERVER_ENABLED} || ${WUD_SERVER_ENABLED} == 'true' ]]; then curl --fail http://localhost:${WUD_SERVER_PORT:-3000}/health || exit 1; else exit 0; fi;
+HEALTHCHECK --interval=30s --timeout=5s CMD if [[ -z ${BT_SERVER_ENABLED} || ${BT_SERVER_ENABLED} == 'true' ]]; then curl --fail http://localhost:${BT_SERVER_PORT:-3000}/health || exit 1; else exit 0; fi;
 
 WORKDIR /home/node/app
 

@@ -7,9 +7,9 @@ The `command` trigger lets you run arbitrary commands upon container update noti
 
 | Env var                                      |    Required    | Description                 | Supported values                            | Default value when missing |
 |----------------------------------------------|:--------------:|-----------------------------|---------------------------------------------|----------------------------| 
-| `WUD_TRIGGER_COMMAND_{trigger_name}_CMD`     | :red_circle:   | The command to run          |                                             |                            |
-| `WUD_TRIGGER_COMMAND_{trigger_name}_SHELL`   | :red_circle:   | The shell to use            | Any valid installed shell path              | `/bin/sh`                  |
-| `WUD_TRIGGER_COMMAND_{trigger_name}_TIMEOUT` | :red_circle:   | The command timeout (in ms) | Any positive integer (`0` means no timeout) | `60000`                    |
+| `BT_TRIGGER_COMMAND_{trigger_name}_CMD`     | :red_circle:   | The command to run          |                                             |                            |
+| `BT_TRIGGER_COMMAND_{trigger_name}_SHELL`   | :red_circle:   | The shell to use            | Any valid installed shell path              | `/bin/sh`                  |
+| `BT_TRIGGER_COMMAND_{trigger_name}_TIMEOUT` | :red_circle:   | The command timeout (in ms) | Any positive integer (`0` means no timeout) | `60000`                    |
 
 ?> This trigger also supports the [common configuration variables](configuration/triggers/?id=common-trigger-configuration).
 
@@ -86,12 +86,12 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_COMMAND_LOCAL_CMD=echo $${display_name} can be updated to $${update_kind_remote_value}
+      - BT_TRIGGER_COMMAND_LOCAL_CMD=echo $${display_name} can be updated to $${update_kind_remote_value}
 ```
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_TRIGGER_COMMAND_LOCAL_CMD=echo ${display_name} can be updated to ${update_kind_remote_value} \
+  -e BT_TRIGGER_COMMAND_LOCAL_CMD=echo ${display_name} can be updated to ${update_kind_remote_value} \
   ...
   getwud/wud
 ```
@@ -107,15 +107,15 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_COMMAND_LOCAL_CMD=bash -c /wud/trigger.sh
+      - BT_TRIGGER_COMMAND_LOCAL_CMD=bash -c /bigtower/trigger.sh
     volumes:
-      - ${PWD}/wud/trigger.sh:/wud/trigger.sh
+      - ${PWD}/bigtower/trigger.sh:/bigtower/trigger.sh
 ```
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_TRIGGER_COMMAND_LOCAL_CMD=WUD_TRIGGER_COMMAND_LOCAL_CMD=bash -c /wud/trigger.sh \
-  -v ${PWD}/wud/trigger.sh:/wud/trigger.sh
+  -e BT_TRIGGER_COMMAND_LOCAL_CMD=BT_TRIGGER_COMMAND_LOCAL_CMD=bash -c /bigtower/trigger.sh \
+  -v ${PWD}/bigtower/trigger.sh:/bigtower/trigger.sh
   ...
   getwud/wud
 ```

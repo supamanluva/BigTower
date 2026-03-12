@@ -1,10 +1,11 @@
+import { apiFetchJson } from "@/services/api";
+
 function getLogIcon() {
   return "mdi-bug";
 }
 
 async function getLog() {
-  const response = await fetch("/api/log", { credentials: "include" });
-  return response.json();
+  return apiFetchJson("/api/log");
 }
 
 export { getLogIcon, getLog };

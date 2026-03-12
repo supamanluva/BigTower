@@ -1,27 +1,28 @@
 <template>
-  <v-card variant="outlined">
-    <v-list-item>
+  <v-card variant="outlined" rounded="lg">
+    <v-list-item class="py-2">
       <template v-slot:prepend>
-        <v-icon>mdi-bell-ring</v-icon>
+        <v-icon color="secondary">mdi-bell-ring-outline</v-icon>
       </template>
-      <v-list-item-title class="text-capitalize">
-        <router-link to="/configuration/triggers">
-          {{ trigger.type }} {{ trigger.name }}
+      <v-list-item-title class="text-capitalize text-body-2 font-weight-medium">
+        <router-link to="/settings" class="text-decoration-none">
+          {{ trigger.type }} — {{ trigger.name }}
         </router-link>
       </v-list-item-title>
-      <v-list-item-subtitle>
-        (threshold {{ trigger.configuration.threshold }})
+      <v-list-item-subtitle class="text-caption">
+        Runs on {{ thresholdLabel }} updates
       </v-list-item-subtitle>
       <template v-slot:append>
         <v-btn
-          variant="outlined"
+          variant="tonal"
           color="accent"
+          size="small"
           :disabled="!updateAvailable"
           @click="runTrigger"
           :loading="isTriggering"
         >
+          <v-icon start size="small">mdi-play</v-icon>
           Run
-          <v-icon end>mdi-gesture-tap</v-icon>
         </v-btn>
       </template>
     </v-list-item>

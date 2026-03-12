@@ -18,13 +18,21 @@ module.exports = defineConfig({
   },
 
   pwa: {
-    name: "WUD",
-    themeColor: "#00355E",
-    msTileColor: "#00355E",
-    mobileWebAppCapable: "yes",
+    name: "BigTower",
+    themeColor: "#1565C0",
+    msTileColor: "#1565C0",
+    mobileWebAppCapable: "no",
     manifestOptions: {
-      short_name: "WUD",
-      background_color: "#00355E",
+      short_name: "BigTower",
+      background_color: "#ffffff",
+    },
+    iconPaths: {
+      faviconSVG: 'img/icons/favicon.svg',
+      favicon32: 'img/icons/favicon-32x32.png',
+      favicon16: 'img/icons/favicon-16x16.png',
+      appleTouchIcon: 'img/icons/apple-touch-icon.png',
+      msTileImage: 'img/icons/android-chrome-192x192.png',
+      maskIcon: null,
     },
   },
 

@@ -10,7 +10,7 @@ const ifttt = new Ifttt();
 
 const configurationValid = {
     key: 'secret',
-    event: 'wud-image',
+    event: 'bigtower-image',
     threshold: 'all',
     mode: 'simple',
     once: true,

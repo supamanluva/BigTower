@@ -54,13 +54,34 @@ function getRegistryProviderIcon(provider) {
   return icon;
 }
 
+import { apiFetch, apiFetchJson } from "@/services/api";
+
 /**
  * get all registries.
  * @returns {Promise<any>}
  */
 async function getAllRegistries() {
-  const response = await fetch("/api/registries", { credentials: "include" });
-  return response.json();
+  return apiFetchJson("/api/registries");
 }
 
-export { getRegistryIcon, getRegistryProviderIcon, getAllRegistries };
+async function createRegistry(data: { type: string; name: string; configuration: Record<string, any> }) {
+  return apiFetchJson("/api/registries", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+async function updateRegistry(type: string, name: string, configuration: Record<string, any>) {
+  return apiFetchJson(`/api/registries/${type}/${name}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ configuration }),
+  });
+}
+
+async function deleteRegistry(type: string, name: string) {
+  return apiFetchJson(`/api/registries/${type}/${name}`, { method: "DELETE" });
+}
+
+export { getRegistryIcon, getRegistryProviderIcon, getAllRegistries, createRegistry, updateRegistry, deleteRegistry };

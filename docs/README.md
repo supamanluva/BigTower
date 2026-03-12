@@ -1,9 +1,8 @@
 # Introduction
 
-![Docker pulls](https://img.shields.io/docker/pulls/getwud/wud)
-![License](https://img.shields.io/github/license/getwud/wud)
+![License](https://img.shields.io/github/license/supamanluva/BigTower)
 
-## WUD <small>(aka ***What's up Docker?***)</small>
+## BigTower
 
 Keep your containers up-to-date!
 
@@ -15,7 +14,6 @@ Keep your containers up-to-date!
 
 `TRIGGERS` perform actions when updates are available
 
-![image](assets/wud-arch.png)
 
 ## Supported triggers
 
@@ -52,7 +50,7 @@ A Web UI allows to get container insights and to manually run the triggers.
 
 ## Integration
 
-`WUD` is meant to play nicely with your favorite tools.
+`BigTower` is meant to play nicely with your favorite tools.
 
 - [**Home-Assistant**](https://www.home-assistant.io/)
 - [**Prometheus**](https://prometheus.io/)

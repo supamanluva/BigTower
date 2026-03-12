@@ -40,9 +40,11 @@ export function init() {
         register.removeSingleMetric(gaugeContainer.name);
     }
     gaugeContainer = new Gauge({
-        name: 'wud_containers',
+        name: 'bt_containers',
         help: 'The watched containers',
         labelNames: [
+            'auto_update',
+            'cron',
             'display_icon',
             'display_name',
             'error_message',

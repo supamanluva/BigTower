@@ -1,17 +1,17 @@
 {
     "env": {
-        "WUD_VERSION": "dev",
-        "WUD_STORE_PATH": ".store",
-        "WUD_LOG_LEVEL": "debug",
-        "WUD_WATCHER_LOCAL_WATCHBYDEFAULT": "true",
-        "WUD_AUTH_BASIC_JOHN_USER": "john",
-        "WUD_AUTH_BASIC_JOHN_HASH": "$apr1$8zDVtSAY$62WBh9DspNbUKMZXYRsjS/",
-        "WUD_TRIGGER_COMMAND_TMP_CMD": "bash -c ../test/cmd_test.sh",
-        "WUD_TRIGGER_COMMAND_TMP_ONCE": "false",
-        "WUD_TRIGGER_NTFY_ONE_TOPIC": "235ef38e-f1db-414a-964f-ce3f2cc8094d",
-        "WUD_TRIGGER_NTFY_TWO_TOPIC": "6abd7f9d-f140-4543-af3e-749252660d89",
-        "WUD_TRIGGER_NTFY_THREE_TOPIC": "9f5c9961-adb2-4ab7-a078-0671856948c4",
-        "WUD_TRIGGER_NTFY_THREE_AUTO": "false",
-        "WUD_PROMETHEUS_ENABLED": "false"
+        "BT_VERSION": "dev",
+        "BT_STORE_PATH": ".store",
+        "BT_LOG_LEVEL": "debug",
+        "BT_WATCHER_LOCAL_WATCHBYDEFAULT": "true",
+        "BT_AUTH_BASIC_JOHN_USER": "john",
+        "BT_AUTH_BASIC_JOHN_HASH": "$apr1$8zDVtSAY$62WBh9DspNbUKMZXYRsjS/",
+        "BT_TRIGGER_COMMAND_TMP_CMD": "bash -c ../test/cmd_test.sh",
+        "BT_TRIGGER_COMMAND_TMP_ONCE": "false",
+        "BT_TRIGGER_NTFY_ONE_TOPIC": "235ef38e-f1db-414a-964f-ce3f2cc8094d",
+        "BT_TRIGGER_NTFY_TWO_TOPIC": "6abd7f9d-f140-4543-af3e-749252660d89",
+        "BT_TRIGGER_NTFY_THREE_TOPIC": "9f5c9961-adb2-4ab7-a078-0671856948c4",
+        "BT_TRIGGER_NTFY_THREE_AUTO": "false",
+        "BT_PROMETHEUS_ENABLED": "false"
     }
 }

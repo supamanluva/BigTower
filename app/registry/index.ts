@@ -12,6 +12,7 @@ import {
     getRegistryConfigurations,
     getAuthenticationConfigurations,
 } from '../configuration';
+import * as componentStore from '../store/component';
 import Component, { ComponentConfiguration } from './Component';
 import Trigger from '../triggers/providers/Trigger';
 import Watcher from '../watchers/Watcher';
@@ -102,7 +103,7 @@ function getHelpfulErrorMessage(
 
     if (error.includes('Cannot find module')) {
         const kindDisplay = kind.charAt(0).toUpperCase() + kind.slice(1);
-        const envVarPattern = `WUD_${kindDisplay.toUpperCase()}_${provider.toUpperCase()}_*`;
+        const envVarPattern = `BT_${kindDisplay.toUpperCase()}_${provider.toUpperCase()}_*`;
 
         message = `Unknown ${kind} provider: '${provider}'.`;
         message += `\n  (Check your environment variables - this comes from: ${envVarPattern})`;
@@ -416,10 +417,49 @@ export async function init() {
     // Register authentications
     await registerAuthentications();
 
+    // Load stored component configurations (user-added via UI)
+    await loadStoredComponents();
+
     // Gracefully exit when possible
     process.on('SIGINT', deregisterAll);
     process.on('SIGTERM', deregisterAll);
 }
+
+/**
+ * Load stored component configurations from the persistent store.
+ * These are components added via the UI that should survive restarts.
+ */
+async function loadStoredComponents() {
+    const componentPaths = {
+        watcher: '../watchers/providers',
+        trigger: '../triggers/providers',
+        registry: '../registries/providers',
+        authentication: '../authentications/providers',
+    };
+    const storedConfigs = componentStore.getAllComponentConfigs();
+    for (const config of storedConfigs) {
+        const id = `${config.type}.${config.name}`;
+        // Skip if already registered from env vars
+        if (state[config.kind] && state[config.kind][id]) {
+            continue;
+        }
+        try {
+            await registerComponent(
+                config.kind,
+                config.type,
+                config.name,
+                config.configuration,
+                componentPaths[config.kind],
+            );
+            log.info(`Loaded stored ${config.kind}: ${id}`);
+        } catch (e: any) {
+            log.warn(`Failed to load stored ${config.kind} ${id}: ${e.message}`);
+        }
+    }
+}
+
+// Public API for runtime component management
+export { registerComponent, deregisterComponent };
 
 // The following exports are meant for testing only
 export {

@@ -21,7 +21,13 @@ export default defineComponent({
       isTriggering: false,
     };
   },
-  computed: {},
+  computed: {
+    thresholdLabel(): string {
+      const t = this.trigger.configuration?.threshold;
+      if (!t || t === "all") return "all";
+      return t;
+    },
+  },
 
   methods: {
     async runTrigger() {
@@ -36,13 +42,12 @@ export default defineComponent({
       } catch (err: any) {
         (this as any).$eventBus.emit(
           "notify",
-          `Trigger executed with error (${err.message}})`,
+          `Trigger executed with error (${err.message})`,
           "error",
         );
       } finally {
         this.isTriggering = false;
       }
-      this.isTriggering = false;
     },
   },
 });

@@ -1,8 +1,8 @@
 # Authentication
   
-WUD allows `Anonymous` access by default.
+BigTower allows `Anonymous` access by default.
 
-You can enable 1 or multiple authentication strategies using `WUD_AUTH_*` env vars.
+You can enable 1 or multiple authentication strategies using `BT_AUTH_*` env vars.
 
 !> Please pay attention that all API routes & all UI views will be authenticated.
 

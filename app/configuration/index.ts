@@ -32,51 +32,51 @@ export function get(prop, env = process.env) {
 
 /**
  * Lookup external secrets defined in files.
- * @param wudEnvVars
+ * @param btEnvVars
  */
-export function replaceSecrets(wudEnvVars) {
-    const secretFileEnvVars = Object.keys(wudEnvVars).filter((wudEnvVar) =>
-        wudEnvVar.toUpperCase().endsWith(VAR_FILE_SUFFIX),
+export function replaceSecrets(btEnvVars) {
+    const secretFileEnvVars = Object.keys(btEnvVars).filter((btEnvVar) =>
+        btEnvVar.toUpperCase().endsWith(VAR_FILE_SUFFIX),
     );
     secretFileEnvVars.forEach((secretFileEnvVar) => {
         const secretKey = secretFileEnvVar.replace(VAR_FILE_SUFFIX, '');
-        const secretFilePath = wudEnvVars[secretFileEnvVar];
+        const secretFilePath = btEnvVars[secretFileEnvVar];
         const secretFileValue = fs.readFileSync(secretFilePath, 'utf-8');
-        delete wudEnvVars[secretFileEnvVar];
-        wudEnvVars[secretKey] = secretFileValue;
+        delete btEnvVars[secretFileEnvVar];
+        btEnvVars[secretKey] = secretFileValue;
     });
 }
 
-// 1. Get a copy of all wud related env vars
-export const wudEnvVars = {};
+// 1. Get a copy of all BigTower related env vars
+export const btEnvVars = {};
 Object.keys(process.env)
-    .filter((envVar) => envVar.toUpperCase().startsWith('WUD'))
-    .forEach((wudEnvVar) => {
-        wudEnvVars[wudEnvVar] = process.env[wudEnvVar];
+    .filter((envVar) => envVar.toUpperCase().startsWith('BT'))
+    .forEach((btEnvVar) => {
+        btEnvVars[btEnvVar] = process.env[btEnvVar];
     });
 
 // 2. Replace all secret files referenced by their secret values
-replaceSecrets(wudEnvVars);
+replaceSecrets(btEnvVars);
 
 export function getVersion() {
-    return wudEnvVars.WUD_VERSION || 'unknown';
+    return btEnvVars.BT_VERSION || 'unknown';
 }
 
 export function getLogLevel() {
-    return wudEnvVars.WUD_LOG_LEVEL || 'info';
+    return btEnvVars.BT_LOG_LEVEL || 'info';
 }
 /**
  * Get watcher configuration.
  */
 export function getWatcherConfigurations() {
-    return get('wud.watcher', wudEnvVars);
+    return get('bt.watcher', btEnvVars);
 }
 
 /**
  * Get trigger configurations.
  */
 export function getTriggerConfigurations() {
-    return get('wud.trigger', wudEnvVars);
+    return get('bt.trigger', btEnvVars);
 }
 
 /**
@@ -84,7 +84,7 @@ export function getTriggerConfigurations() {
  * @returns {*}
  */
 export function getRegistryConfigurations() {
-    return get('wud.registry', wudEnvVars);
+    return get('bt.registry', btEnvVars);
 }
 
 /**
@@ -92,21 +92,21 @@ export function getRegistryConfigurations() {
  * @returns {*}
  */
 export function getAuthenticationConfigurations() {
-    return get('wud.auth', wudEnvVars);
+    return get('bt.auth', btEnvVars);
 }
 
 /**
  * Get Input configurations.
  */
 export function getStoreConfiguration() {
-    return get('wud.store', wudEnvVars);
+    return get('bt.store', btEnvVars);
 }
 
 /**
  * Get Server configurations.
  */
 export function getServerConfiguration() {
-    const configurationFromEnv = get('wud.server', wudEnvVars);
+    const configurationFromEnv = get('bt.server', btEnvVars);
     const configurationSchema = joi.object().keys({
         enabled: joi.boolean().default(true),
         port: joi.number().default(3000).integer().min(0).max(65535),
@@ -155,7 +155,7 @@ export function getServerConfiguration() {
  * Get Prometheus configurations.
  */
 export function getPrometheusConfiguration() {
-    const configurationFromEnv = get('wud.prometheus', wudEnvVars);
+    const configurationFromEnv = get('bt.prometheus', btEnvVars);
     const configurationSchema = joi.object().keys({
         enabled: joi.boolean().default(true),
     });
@@ -171,7 +171,7 @@ export function getPrometheusConfiguration() {
 }
 
 export function getPublicUrl(req) {
-    const publicUrl = wudEnvVars.WUD_PUBLIC_URL;
+    const publicUrl = btEnvVars.BT_PUBLIC_URL;
     if (publicUrl) {
         return publicUrl;
     }

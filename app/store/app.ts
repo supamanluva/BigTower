@@ -12,7 +12,7 @@ let app;
 
 function saveAppInfosAndMigrate() {
     const appInfosCurrent = {
-        name: 'wud',
+        name: 'bigtower',
         version: getVersion(),
     };
     const appInfosSaved = app.findOne({});

@@ -7,10 +7,10 @@ The `discord` trigger lets you send realtime notifications using [Discord](https
 
 | Env var                                          | Required       | Description                              | Supported values      | Default value when missing  |
 |--------------------------------------------------|:--------------:|------------------------------------------|-----------------------|-----------------------------|
-| `WUD_TRIGGER_DISCORD_{trigger_name}_URL`         | :red_circle:   | The Discord webhook URL                  | HTTPS URL             |                             |
-| `WUD_TRIGGER_DISCORD_{trigger_name}_BOTUSERNAME` | :white_circle: | The bot username                         |                       | WUD                         |
-| `WUD_TRIGGER_DISCORD_{trigger_name}_CARDCOLOR`   | :white_circle: | Color of the message card                | Color in decimal base | 65280                       |
-| `WUD_TRIGGER_DISCORD_{trigger_name}_CARDLABEL`   | :white_circle: | Optional label to display in the message | String                |                             |
+| `BT_TRIGGER_DISCORD_{trigger_name}_URL`         | :red_circle:   | The Discord webhook URL                  | HTTPS URL             |                             |
+| `BT_TRIGGER_DISCORD_{trigger_name}_BOTUSERNAME` | :white_circle: | The bot username                         |                       | BigTower                         |
+| `BT_TRIGGER_DISCORD_{trigger_name}_CARDCOLOR`   | :white_circle: | Color of the message card                | Color in decimal base | 65280                       |
+| `BT_TRIGGER_DISCORD_{trigger_name}_CARDLABEL`   | :white_circle: | Optional label to display in the message | String                |                             |
 
 ?> This trigger also supports the [common configuration variables](configuration/triggers/?id=common-trigger-configuration).
 
@@ -25,15 +25,15 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_DISCORD_1_URL=https://discord.com/api/webhooks/123/456
-      - WUD_TRIGGER_DISCORD_1_BOTUSERNAME=WUD
+      - BT_TRIGGER_DISCORD_1_URL=https://discord.com/api/webhooks/123/456
+      - BT_TRIGGER_DISCORD_1_BOTUSERNAME=BigTower
 ```
 
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_TRIGGER_DISCORD_1_URL="https://discord.com/api/webhooks/123/456" \
-  -e WUD_TRIGGER_DISCORD_1_BOTUSERNAME="WUD" \
+  -e BT_TRIGGER_DISCORD_1_URL="https://discord.com/api/webhooks/123/456" \
+  -e BT_TRIGGER_DISCORD_1_BOTUSERNAME="BigTower" \
   ...
   getwud/wud
 ```

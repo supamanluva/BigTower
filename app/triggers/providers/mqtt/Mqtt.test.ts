@@ -12,8 +12,8 @@ mqtt.log = log;
 
 const configurationValid = {
     url: 'mqtt://host:1883',
-    topic: 'wud/container',
-    clientid: 'wud',
+    topic: 'bigtower/container',
+    clientid: 'bigtower',
     hass: {
         discovery: false,
         enabled: false,
@@ -43,14 +43,14 @@ const containerData = [
         containerName: 'homeassistant',
         data: {
             name: 'homeassistant',
-            topic: 'wud/container/local/homeassistant',
+            topic: 'bigtower/container/local/homeassistant',
         },
     },
     {
         containerName: 'home.assistant',
         data: {
             name: 'home.assistant',
-            topic: 'wud/container/local/home-assistant',
+            topic: 'bigtower/container/local/home-assistant',
         },
     },
 ];
@@ -71,7 +71,7 @@ test('validateConfiguration should return validated configuration when valid', a
 test('validateConfiguration should apply_default_configuration', async () => {
     const validatedConfiguration = mqtt.validateConfiguration({
         url: configurationValid.url,
-        clientid: 'wud',
+        clientid: 'bigtower',
     });
     expect(validatedConfiguration).toStrictEqual(configurationValid);
 });
@@ -89,7 +89,7 @@ test('maskConfiguration should mask sensitive data', async () => {
     mqtt.configuration = {
         password: 'password',
         url: 'mqtt://host:1883',
-        topic: 'wud/container',
+        topic: 'bigtower/container',
         hass: {
             discovery: false,
             enabled: false,
@@ -103,7 +103,7 @@ test('maskConfiguration should mask sensitive data', async () => {
             prefix: 'homeassistant',
         },
         password: 'p******d',
-        topic: 'wud/container',
+        topic: 'bigtower/container',
         url: 'mqtt://host:1883',
     });
 });
@@ -113,7 +113,7 @@ test('initTrigger should init Mqtt client', async () => {
         ...configurationValid,
         user: 'user',
         password: 'password',
-        clientid: 'wud',
+        clientid: 'bigtower',
         hass: {
             enabled: true,
             discovery: true,
@@ -123,7 +123,7 @@ test('initTrigger should init Mqtt client', async () => {
     const spy = jest.spyOn(mqttClient, 'connectAsync');
     await mqtt.initTrigger();
     expect(spy).toHaveBeenCalledWith('mqtt://host:1883', {
-        clientId: 'wud',
+        clientId: 'bigtower',
         username: 'user',
         password: 'password',
         rejectUnauthorized: true,
@@ -134,7 +134,7 @@ test.each(containerData)(
     'trigger should format json message payload as expected',
     async ({ containerName, data }) => {
         mqtt.configuration = {
-            topic: 'wud/container',
+            topic: 'bigtower/container',
         };
         const container = {
             id: '31a61a8305ef1fc9a71fa4f20a68d7ec88b28e32303bbc4a5f192e851165b816',

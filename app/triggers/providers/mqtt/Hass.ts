@@ -9,9 +9,9 @@ import {
 } from '../../../event';
 import * as containerStore from '../../../store/container';
 
-const HASS_DEVICE_ID = 'wud';
-const HASS_DEVICE_NAME = 'wud';
-const HASS_MANUFACTURER = 'wud';
+const HASS_DEVICE_ID = 'bigtower';
+const HASS_DEVICE_NAME = 'bigtower';
+const HASS_MANUFACTURER = 'bigtower';
 const HASS_ENTITY_VALUE_TEMPLATE = '{{ value_json.image_tag_value }}';
 const HASS_LATEST_VERSION_TEMPLATE =
     '{% if value_json.update_kind_kind == "digest" %}{{ value_json.result_digest[:15] }}{% else %}{{ value_json.result_tag }}{% endif %}';
@@ -26,7 +26,7 @@ function getHassEntityId(topic) {
 }
 
 /**
- * Get HA wud device info.
+ * Get HA BigTower device info.
  * @returns {*}
  */
 function getHaDevice() {

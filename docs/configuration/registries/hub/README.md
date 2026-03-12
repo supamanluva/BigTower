@@ -8,17 +8,17 @@ Currently, the supported credentials are:
 - Docker Base64 credentials (like in [.docker/config.json](https://docs.docker.com/engine/reference/commandline/auth/))
 - Docker Hub auth + Docker Hub password (not recommended)
 
-!> By default, if you don't configure any registries, WUD will configure a default one with anonymous access. \
+!> By default, if you don't configure any registries, BigTower will configure a default one with anonymous access. \
 Don't forget to configure authentication if you're using [Docker Hub Private Repositories](https://docs.docker.com/docker-hub/repos/#private-repositories).
 
 ### Variables
 
 | Env var                            | Required       | Description                                                                          | Supported values                                         | Default value when missing |
 | ---------------------------------- |:--------------:| ------------------------------------------------------------------------------------ | -------------------------------------------------------- | -------------------------- | 
-| `WUD_REGISTRY_HUB_PUBLIC_LOGIN`    | :white_circle: | A valid Docker Hub Login                                                             | WUD_REGISTRY_HUB_PUBLIC_TOKEN must be defined            |                            |
-| `WUD_REGISTRY_HUB_PUBLIC_PASSWORD` | :white_circle: | A valid Docker Hub Token                                                             | WUD_REGISTRY_HUB_PUBLIC_LOGIN must be defined            |                            |
-| `WUD_REGISTRY_HUB_PUBLIC_TOKEN`    | :white_circle: | A valid Docker Hub Token (deprecated; replaced by `WUD_REGISTRY_HUB_PUBLIC_PASSWORD` | WUD_REGISTRY_HUB_PUBLIC_LOGIN must be defined            |                            |
-| `WUD_REGISTRY_HUB_PUBLIC_AUTH`     | :white_circle: | A valid Docker Hub Base64 Auth String                                                | WUD_REGISTRY_HUB_PUBLIC_LOGIN/TOKEN  must not be defined |                            |
+| `BT_REGISTRY_HUB_PUBLIC_LOGIN`    | :white_circle: | A valid Docker Hub Login                                                             | BT_REGISTRY_HUB_PUBLIC_TOKEN must be defined            |                            |
+| `BT_REGISTRY_HUB_PUBLIC_PASSWORD` | :white_circle: | A valid Docker Hub Token                                                             | BT_REGISTRY_HUB_PUBLIC_LOGIN must be defined            |                            |
+| `BT_REGISTRY_HUB_PUBLIC_TOKEN`    | :white_circle: | A valid Docker Hub Token (deprecated; replaced by `BT_REGISTRY_HUB_PUBLIC_PASSWORD` | BT_REGISTRY_HUB_PUBLIC_LOGIN must be defined            |                            |
+| `BT_REGISTRY_HUB_PUBLIC_AUTH`     | :white_circle: | A valid Docker Hub Base64 Auth String                                                | BT_REGISTRY_HUB_PUBLIC_LOGIN/TOKEN  must not be defined |                            |
 
 ### Examples
 
@@ -29,7 +29,7 @@ Don't forget to configure authentication if you're using [Docker Hub Private Rep
 
 ##### 2. Go to your&nbsp;[Security Settings](https://hub.docker.com/settings/security)
 - Create a new Access Token
-- Copy it and use it as the `WUD_REGISTRY_HUB_PUBLIC_TOKEN` value
+- Copy it and use it as the `BT_REGISTRY_HUB_PUBLIC_TOKEN` value
 
 ![image](hub_token.png)
 
@@ -41,14 +41,14 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_REGISTRY_HUB_PUBLIC_LOGIN=mylogin
-      - WUD_REGISTRY_HUB_PUBLIC_PASSWORD=fb4d5db9-e64d-3648-8846-74d0846e55de
+      - BT_REGISTRY_HUB_PUBLIC_LOGIN=mylogin
+      - BT_REGISTRY_HUB_PUBLIC_PASSWORD=fb4d5db9-e64d-3648-8846-74d0846e55de
 ```
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_REGISTRY_HUB_PUBLIC_LOGIN="mylogin"
-  -e WUD_REGISTRY_HUB_PUBLIC_PASSWORD="fb4d5db9-e64d-3648-8846-74d0846e55de"
+  -e BT_REGISTRY_HUB_PUBLIC_LOGIN="mylogin"
+  -e BT_REGISTRY_HUB_PUBLIC_PASSWORD="fb4d5db9-e64d-3648-8846-74d0846e55de"
   ...
   getwud/wud
 ```
@@ -75,12 +75,12 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_REGISTRY_HUB_PUBLIC_AUTH=am9obmRvZToyYzFiZDg3Mi1lZmI2LTRmM2EtODFhYS03MjQ1MThhMGE1OTI=
+      - BT_REGISTRY_HUB_PUBLIC_AUTH=am9obmRvZToyYzFiZDg3Mi1lZmI2LTRmM2EtODFhYS03MjQ1MThhMGE1OTI=
 ```
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_REGISTRY_HUB_PUBLIC_AUTH="am9obmRvZToyYzFiZDg3Mi1lZmI2LTRmM2EtODFhYS03MjQ1MThhMGE1OTI="
+  -e BT_REGISTRY_HUB_PUBLIC_AUTH="am9obmRvZToyYzFiZDg3Mi1lZmI2LTRmM2EtODFhYS03MjQ1MThhMGE1OTI="
   ...
   getwud/wud
 ```

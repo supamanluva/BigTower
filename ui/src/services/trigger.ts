@@ -1,24 +1,39 @@
+import { apiFetch, apiFetchJson } from "@/services/api";
+
 function getTriggerIcon() {
   return "mdi-bell-ring";
 }
 
 async function getAllTriggers() {
-  const response = await fetch("/api/triggers", { credentials: "include" });
-  return response.json();
+  return apiFetchJson("/api/triggers");
 }
 
 async function runTrigger({ triggerType, triggerName, container }) {
-  const response = await fetch(`/api/triggers/${triggerType}/${triggerName}`, {
+  return apiFetchJson(`/api/triggers/${triggerType}/${triggerName}`, {
     method: "POST",
-    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(container),
   });
-  const json = await response.json();
-  if (response.status !== 200) {
-    throw new Error(json.error ? json.error : "Unknown error");
-  }
-  return json;
 }
 
-export { getTriggerIcon, getAllTriggers, runTrigger };
+async function createTrigger(data: { type: string; name: string; configuration: Record<string, any> }) {
+  return apiFetchJson("/api/triggers", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+async function updateTrigger(type: string, name: string, configuration: Record<string, any>) {
+  return apiFetchJson(`/api/triggers/${type}/${name}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ configuration }),
+  });
+}
+
+async function deleteTrigger(type: string, name: string) {
+  return apiFetchJson(`/api/triggers/${type}/${name}`, { method: "DELETE" });
+}
+
+export { getTriggerIcon, getAllTriggers, runTrigger, createTrigger, updateTrigger, deleteTrigger };

@@ -9,7 +9,11 @@
         />
       </v-col>
     </v-row>
-    <v-card-text v-else> No triggers associated to the container </v-card-text>
+    <v-card-text v-else class="text-center text-medium-emphasis py-6">
+      <v-icon size="32" color="grey-lighten-1" class="mb-2">mdi-bell-off-outline</v-icon>
+      <div>No actions configured for this container</div>
+      <div class="text-caption text-disabled mt-1">Actions are set up via environment variables (BT_TRIGGER_*)</div>
+    </v-card-text>
   </v-container>
 </template>
 

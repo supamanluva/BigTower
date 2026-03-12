@@ -54,6 +54,8 @@ export interface Container {
     link?: string;
     triggerInclude?: string;
     triggerExclude?: string;
+    cron?: string;
+    autoUpdate?: boolean;
     image: ContainerImage;
     result?: ContainerResult;
     error?: {
@@ -80,6 +82,8 @@ const schema = joi.object({
     link: joi.string(),
     triggerInclude: joi.string(),
     triggerExclude: joi.string(),
+    cron: joi.string().allow('', null),
+    autoUpdate: joi.boolean().default(false),
     image: joi
         .object({
             id: joi.string().min(1).required(),
@@ -285,7 +289,7 @@ function addUpdateKindProperty(container: Container) {
             ) {
                 if (container.image.tag.value !== container.result.tag) {
                     updateKind.kind = 'tag';
-                    let semverDiffWud: ContainerUpdateKind['semverDiff'] =
+                    let semverDiffBt: ContainerUpdateKind['semverDiff'] =
                         'unknown';
                     const isSemver = container.image.tag.semver;
                     if (isSemver) {
@@ -302,26 +306,26 @@ function addUpdateKindProperty(container: Container) {
                         switch (semverDiff) {
                             case 'major':
                             case 'premajor':
-                                semverDiffWud = 'major';
+                                semverDiffBt = 'major';
                                 break;
                             case 'minor':
                             case 'preminor':
-                                semverDiffWud = 'minor';
+                                semverDiffBt = 'minor';
                                 break;
                             case 'patch':
                             case 'prepatch':
-                                semverDiffWud = 'patch';
+                                semverDiffBt = 'patch';
                                 break;
                             case 'prerelease':
-                                semverDiffWud = 'prerelease';
+                                semverDiffBt = 'prerelease';
                                 break;
                             default:
-                                semverDiffWud = 'unknown';
+                                semverDiffBt = 'unknown';
                         }
                     }
                     updateKind.localValue = container.image.tag.value;
                     updateKind.remoteValue = container.result.tag;
-                    updateKind.semverDiff = semverDiffWud;
+                    updateKind.semverDiff = semverDiffBt;
                 } else if (
                     container.image.digest &&
                     container.image.digest.value !== container.result.digest

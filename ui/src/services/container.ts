@@ -1,50 +1,47 @@
+import { apiFetch, apiFetchJson } from "@/services/api";
+
 function getContainerIcon() {
   return "mdi-docker";
 }
 
 async function getAllContainers() {
-  const response = await fetch("/api/containers", { credentials: "include" });
-  return response.json();
+  return apiFetchJson("/api/containers");
 }
 
 async function refreshAllContainers() {
-  const response = await fetch(`/api/containers/watch`, {
-    method: "POST",
-    credentials: "include",
-  });
-  return response.json();
+  return apiFetchJson("/api/containers/watch", { method: "POST" });
 }
 
 async function refreshContainer(containerId) {
-  const response = await fetch(`/api/containers/${containerId}/watch`, {
-    method: "POST",
-    credentials: "include",
+  const response = await apiFetch(`/api/containers/${containerId}/watch`, { method: "POST" }).catch((e) => {
+    if (e.message?.includes("404")) return undefined;
+    throw e;
   });
-  if (response.status === 404) {
-    return undefined;
-  }
+  if (!response) return undefined;
   return response.json();
 }
 
 async function deleteContainer(containerId) {
-  return fetch(`/api/containers/${containerId}`, { method: "DELETE", credentials: "include" });
+  return apiFetch(`/api/containers/${containerId}`, { method: "DELETE" });
 }
 
 async function getContainerTriggers(containerId) {
-  const response = await fetch(`/api/containers/${containerId}/triggers`, { credentials: "include" });
-  return response.json();
+  return apiFetchJson(`/api/containers/${containerId}/triggers`);
 }
 
 async function runTrigger({ containerId, triggerType, triggerName }) {
-  const response = await fetch(
+  return apiFetchJson(
     `/api/containers/${containerId}/triggers/${triggerType}/${triggerName}`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    },
+    { method: "POST", headers: { "Content-Type": "application/json" } },
   );
-  return response.json();
+}
+
+async function updateContainerSettings(containerId: string, settings: { autoUpdate?: boolean; cron?: string | null }) {
+  return apiFetchJson(`/api/containers/${encodeURIComponent(containerId)}/settings`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings),
+  });
 }
 
 export {
@@ -55,4 +52,5 @@ export {
   deleteContainer,
   getContainerTriggers,
   runTrigger,
+  updateContainerSettings,
 };

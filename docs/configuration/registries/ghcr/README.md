@@ -7,8 +7,8 @@ The `ghcr` registry lets you configure [GHCR](https://docs.github.com/en/package
 
 | Env var                                      | Required       | Description     | Supported values                         | Default value when missing |
 | -------------------------------------------- |:--------------:| --------------- | ---------------------------------------- | -------------------------- | 
-| `WUD_REGISTRY_GHCR_{REGISTRY_NAME}_USERNAME` | :white_circle: | Github username |                                          |                            |
-| `WUD_REGISTRY_GHCR_{REGISTRY_NAME}_TOKEN`    | :white_circle: | Github token    | Github password or Github Personal Token |                            |
+| `BT_REGISTRY_GHCR_{REGISTRY_NAME}_USERNAME` | :white_circle: | Github username |                                          |                            |
+| `BT_REGISTRY_GHCR_{REGISTRY_NAME}_TOKEN`    | :white_circle: | Github token    | Github password or Github Personal Token |                            |
 
 ### Examples
 
@@ -22,14 +22,14 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_REGISTRY_GHCR_PRIVATE_USERNAME=john@doe
-      - WUD_REGISTRY_GHCR_PRIVATE_TOKEN=xxxxx 
+      - BT_REGISTRY_GHCR_PRIVATE_USERNAME=john@doe
+      - BT_REGISTRY_GHCR_PRIVATE_TOKEN=xxxxx 
 ```
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_REGISTRY_GHCR_PRIVATE_USERNAME="john@doe" \
-  -e WUD_REGISTRY_GHCR_PRIVATE_TOKEN="xxxxx" \
+  -e BT_REGISTRY_GHCR_PRIVATE_USERNAME="john@doe" \
+  -e BT_REGISTRY_GHCR_PRIVATE_TOKEN="xxxxx" \
   ...
   getwud/wud
 ```
@@ -40,8 +40,8 @@ docker run \
 [Click here](https://github.com/settings/tokens)
 
 #### Click on `Generate new token`
-Choose an expiration time & appropriate scopes (`read:packages` is only needed for wud) and generate.
+Choose an expiration time & appropriate scopes (`read:packages` is only needed for BigTower) and generate.
 ![image](ghcr_01.png)
 
-#### Copy the token & use it as the WUD_REGISTRY_GHCR_{REGISTRY_NAME}_TOKEN value
+#### Copy the token & use it as the BT_REGISTRY_GHCR_{REGISTRY_NAME}_TOKEN value
 ![image](ghcr_02.png)

@@ -1,18 +1,18 @@
 {
-  "name": "wud-e2e",
+  "name": "bigtower-e2e",
   "version": "1.0.0",
-  "description": "WUD - e2e",
+  "description": "BigTower - e2e",
   "main": "index.js",
   "scripts": {
     "lint": "eslint '**/*.js'",
     "cucumber": "cucumber-js **/*.feature",
     "test:local": "dotenvx run -- ../scripts/run-e2e-tests.sh",
     "test:setup": "dotenvx run -- ../scripts/setup-test-containers.sh",
-    "test:start-wud": "dotenvx run -- ../scripts/start-wud.sh",
+    "test:start-bigtower": "dotenvx run -- ../scripts/start-bigtower.sh",
     "test:cleanup": "../scripts/cleanup-test-containers.sh"
   },
   "author": "fmartinou",
-  "repository": "getwud/wud",
+  "repository": "supamanluva/BigTower",
   "license": "MIT",
   "dependencies": {
     "@cucumber/cucumber": "11.1.1",

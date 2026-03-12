@@ -7,23 +7,23 @@ The `mqtt` trigger lets you send container update notifications to an MQTT broke
 
 | Env var                                                  | Required       | Description                                                                                         | Supported values                    | Default value when missing |
 |----------------------------------------------------------|:--------------:|-----------------------------------------------------------------------------------------------------|-------------------------------------|----------------------------| 
-| `WUD_TRIGGER_MQTT_{trigger_name}_URL`                    | :red_circle:   | The URL of the MQTT broker                                                                          | Valid mqtt, mqtts, tcp, ws, wss url |                            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_USER`                   | :white_circle: | The username if broker authentication is enabled                                                    |                                     |                            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_PASSWORD`               | :white_circle: | The password if broker authentication is enabled                                                    |                                     |                            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_CLIENTID`               | :white_circle: | The Mqtt client Id to use                                                                           |                                     | `wud_$random`              |
-| `WUD_TRIGGER_MQTT_{trigger_name}_TOPIC`                  | :white_circle: | The base topic where the updates are published to                                                   |                                     | `wud/container`            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_HASS_ENABLED`           | :white_circle: | Enable [Home-assistant](https://www.home-assistant.io/) integration and deliver additional topics   | `true`, `false`                     | `false`                    |
-| `WUD_TRIGGER_MQTT_{trigger_name}_HASS_DISCOVERY`         | :white_circle: | Enable [Home-assistant](https://www.home-assistant.io/) integration including discovery             | `true`, `false`                     | `false`                    |
-| `WUD_TRIGGER_MQTT_{trigger_name}_HASS_PREFIX`            | :white_circle: | Base topic for hass entity discovery                                                                |                                     | `homeassistant`            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_TLS_CACHAIN`            | :white_circle: | The path to the file containing the server CA chain (when TLS with a private Certificate Authority) | Any valid file path                 |                            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_TLS_CLIENTCERT`         | :white_circle: | The path to the file containing the client public certificate (when TLS mutual authzentication)     | Any valid file path                 |                            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_TLS_CLIENTKEY`          | :white_circle: | The path to the file containing the client private key (when TLS mutual authzentication)            | Any valid file path                 |                            |
-| `WUD_TRIGGER_MQTT_{trigger_name}_TLS_REJECTUNAUTHORIZED` | :white_circle: | Accept or reject when the TLS server certificate cannot be trusted                                  | `true`, `false`                     | `true`                     |
+| `BT_TRIGGER_MQTT_{trigger_name}_URL`                    | :red_circle:   | The URL of the MQTT broker                                                                          | Valid mqtt, mqtts, tcp, ws, wss url |                            |
+| `BT_TRIGGER_MQTT_{trigger_name}_USER`                   | :white_circle: | The username if broker authentication is enabled                                                    |                                     |                            |
+| `BT_TRIGGER_MQTT_{trigger_name}_PASSWORD`               | :white_circle: | The password if broker authentication is enabled                                                    |                                     |                            |
+| `BT_TRIGGER_MQTT_{trigger_name}_CLIENTID`               | :white_circle: | The Mqtt client Id to use                                                                           |                                     | `bt_$random`              |
+| `BT_TRIGGER_MQTT_{trigger_name}_TOPIC`                  | :white_circle: | The base topic where the updates are published to                                                   |                                     | `bigtower/container`            |
+| `BT_TRIGGER_MQTT_{trigger_name}_HASS_ENABLED`           | :white_circle: | Enable [Home-assistant](https://www.home-assistant.io/) integration and deliver additional topics   | `true`, `false`                     | `false`                    |
+| `BT_TRIGGER_MQTT_{trigger_name}_HASS_DISCOVERY`         | :white_circle: | Enable [Home-assistant](https://www.home-assistant.io/) integration including discovery             | `true`, `false`                     | `false`                    |
+| `BT_TRIGGER_MQTT_{trigger_name}_HASS_PREFIX`            | :white_circle: | Base topic for hass entity discovery                                                                |                                     | `homeassistant`            |
+| `BT_TRIGGER_MQTT_{trigger_name}_TLS_CACHAIN`            | :white_circle: | The path to the file containing the server CA chain (when TLS with a private Certificate Authority) | Any valid file path                 |                            |
+| `BT_TRIGGER_MQTT_{trigger_name}_TLS_CLIENTCERT`         | :white_circle: | The path to the file containing the client public certificate (when TLS mutual authzentication)     | Any valid file path                 |                            |
+| `BT_TRIGGER_MQTT_{trigger_name}_TLS_CLIENTKEY`          | :white_circle: | The path to the file containing the client private key (when TLS mutual authzentication)            | Any valid file path                 |                            |
+| `BT_TRIGGER_MQTT_{trigger_name}_TLS_REJECTUNAUTHORIZED` | :white_circle: | Accept or reject when the TLS server certificate cannot be trusted                                  | `true`, `false`                     | `true`                     |
 
 ?> This trigger also supports the [common configuration variables](configuration/triggers/?id=common-trigger-configuration). but only supports the `simple` mode.
 
 ?> You want to customize the name & icon of the Home-Assistant entity? \
-[Use the `wud.display.name` and `wud.display.icon` labels](configuration/watchers/?id=labels).
+[Use the `bt.display.name` and `bt.display.icon` labels](configuration/watchers/?id=labels).
 
 ### Examples
 
@@ -37,13 +37,13 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_MQTT_MOSQUITTO_URL=mqtt://localhost:1883
+      - BT_TRIGGER_MQTT_MOSQUITTO_URL=mqtt://localhost:1883
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_URL="mqtt://localhost:1883" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_URL="mqtt://localhost:1883" \
   ...
   getwud/wud
 ```
@@ -59,23 +59,23 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_MQTT_MOSQUITTO_URL=mqtts://localhost:8883
-      - WUD_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTKEY=/wud/mqtt/client-key.pem
-      - WUD_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTCERT=/wud/mqtt/client-cert.pem
-      - WUD_TRIGGER_MQTT_MOSQUITTO_TLS_CACHAIN=/wud/mqtt/ca.pem
+      - BT_TRIGGER_MQTT_MOSQUITTO_URL=mqtts://localhost:8883
+      - BT_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTKEY=/bigtower/mqtt/client-key.pem
+      - BT_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTCERT=/bigtower/mqtt/client-cert.pem
+      - BT_TRIGGER_MQTT_MOSQUITTO_TLS_CACHAIN=/bigtower/mqtt/ca.pem
     volumes:
-      - /mosquitto/tls/client/client-key.pem:/wud/mqtt/client-key.pem
-      - /mosquitto/tls/client/client-cert.pem:/wud/mqtt/client-cert.pem
-      - /mosquitto/tls/ca.pem:/wud/mqtt/ca.pem
+      - /mosquitto/tls/client/client-key.pem:/bigtower/mqtt/client-key.pem
+      - /mosquitto/tls/client/client-cert.pem:/bigtower/mqtt/client-cert.pem
+      - /mosquitto/tls/ca.pem:/bigtower/mqtt/ca.pem
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_URL="mqtts://localhost:8883" \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTKEY="/wud/mqtt/client-key.pem" \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTCERT="/wud/mqtt/client-cert.pem" \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_TLS_CACHAIN="/wud/mqtt/ca.pem" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_URL="mqtts://localhost:8883" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTKEY="/bigtower/mqtt/client-key.pem" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_TLS_CLIENTCERT="/bigtower/mqtt/client-cert.pem" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_TLS_CACHAIN="/bigtower/mqtt/ca.pem" \
   ...
   getwud/wud
 ```
@@ -91,19 +91,19 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_MQTT_MAQIATTO_URL=tcp://maqiatto.com:1883
-      - WUD_TRIGGER_MQTT_MAQIATTO_USER=john@doe.com
-      - WUD_TRIGGER_MQTT_MAQIATTO_PASSWORD=mysecretpassword
-      - WUD_TRIGGER_MQTT_MAQIATTO_TOPIC=john@doe.com/wud/image
+      - BT_TRIGGER_MQTT_MAQIATTO_URL=tcp://maqiatto.com:1883
+      - BT_TRIGGER_MQTT_MAQIATTO_USER=john@doe.com
+      - BT_TRIGGER_MQTT_MAQIATTO_PASSWORD=mysecretpassword
+      - BT_TRIGGER_MQTT_MAQIATTO_TOPIC=john@doe.com/bigtower/image
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_TRIGGER_MQTT_MAQIATTO_URL="tcp://maqiatto.com:1883" \
-    -e WUD_TRIGGER_MQTT_MAQIATTO_USER="john@doe.com" \
-    -e WUD_TRIGGER_MQTT_MAQIATTO_PASSWORD="mysecretpassword" \
-    -e WUD_TRIGGER_MQTT_MAQIATTO_TOPIC="john@doe.com/wud/image" \
+    -e BT_TRIGGER_MQTT_MAQIATTO_URL="tcp://maqiatto.com:1883" \
+    -e BT_TRIGGER_MQTT_MAQIATTO_USER="john@doe.com" \
+    -e BT_TRIGGER_MQTT_MAQIATTO_PASSWORD="mysecretpassword" \
+    -e BT_TRIGGER_MQTT_MAQIATTO_TOPIC="john@doe.com/bigtower/image" \
   ...
   getwud/wud
 ```
@@ -134,7 +134,7 @@ docker run \
 ### Home-Assistant integration
 ![logo](hass.png)
 
-WUD can be easily integrated into [Home-Assistant](https://www.home-assistant.io/) using [MQTT Discovery](https://www.home-assistant.io/docs/mqtt/discovery/).
+BigTower can be easily integrated into [Home-Assistant](https://www.home-assistant.io/) using [MQTT Discovery](https://www.home-assistant.io/docs/mqtt/discovery/).
 
 <!-- tabs:start -->
 #### **Docker Compose**
@@ -144,17 +144,17 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_MQTT_MOSQUITTO_URL=mqtt://localhost:1883
-      - WUD_TRIGGER_MQTT_MOSQUITTO_HASS_ENABLED=true
-      - WUD_TRIGGER_MQTT_MOSQUITTO_HASS_DISCOVERY=true
+      - BT_TRIGGER_MQTT_MOSQUITTO_URL=mqtt://localhost:1883
+      - BT_TRIGGER_MQTT_MOSQUITTO_HASS_ENABLED=true
+      - BT_TRIGGER_MQTT_MOSQUITTO_HASS_DISCOVERY=true
 ```
 
 #### **Docker**
 ```bash
 docker run \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_URL="mqtt://localhost:1883" \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_HASS_ENABLED="true" \
-    -e WUD_TRIGGER_MQTT_MOSQUITTO_HASS_DISCOVERY="true" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_URL="mqtt://localhost:1883" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_HASS_ENABLED="true" \
+    -e BT_TRIGGER_MQTT_MOSQUITTO_HASS_DISCOVERY="true" \
   ...
   getwud/wud
 ```
@@ -163,7 +163,7 @@ docker run \
 #### Check that mqtt integration is properly configured.
 ![image](hass_01.png)
 
-#### A WUD device is automatically added to the hass registry
+#### A BigTower device is automatically added to the hass registry
 ![image](hass_02.png)
 
 #### Entities are automatically created (per Docker image)

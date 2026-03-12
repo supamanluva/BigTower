@@ -1,13 +1,13 @@
 # Logs
 
-You can adjust the log level with env var WUD_LOG_LEVEL.
+You can adjust the log level with env var BT_LOG_LEVEL.
 
 ### Variables
 
 | Env var          | Required       | Description | Supported values            | Default value when missing  |
 | ---------------- |:--------------:| ----------- | --------------------------- | --------------------------- | 
-| `WUD_LOG_LEVEL`  | :white_circle: | Log level   | error info debug trace      | `info`                      |
-| `WUD_LOG_FORMAT` | :white_circle: | Log format  | text json                   | `text`                      |
+| `BT_LOG_LEVEL`  | :white_circle: | Log level   | error info debug trace      | `info`                      |
+| `BT_LOG_FORMAT` | :white_circle: | Log format  | text json                   | `text`                      |
 
 ### Examples
 
@@ -21,11 +21,11 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_LOG_LEVEL=debug
+      - BT_LOG_LEVEL=debug
 ```
 #### **Docker**
 ```bash
-docker run -e WUD_LOG_LEVEL=debug ... getwud/wud
+docker run -e BT_LOG_LEVEL=debug ... getwud/wud
 ```
 <!-- tabs:end -->
 
@@ -34,7 +34,7 @@ docker run -e WUD_LOG_LEVEL=debug ... getwud/wud
 <!-- tabs:start -->
 #### **Docker**
 ```bash
-docker run -e WUD_LOG_FORMAT=json ... getwud/wud
+docker run -e BT_LOG_FORMAT=json ... getwud/wud
 ```
 
 #### **Docker Compose**
@@ -44,6 +44,6 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_LOG_FORMAT=json
+      - BT_LOG_FORMAT=json
 ```
 <!-- tabs:end -->

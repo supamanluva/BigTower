@@ -19,29 +19,19 @@ const routes = [
     component: () => import("../views/ContainersView.vue"),
   },
   {
-    path: "/configuration/authentications",
-    name: "authentications",
-    component: () => import("../views/ConfigurationAuthenticationsView.vue"),
+    path: "/update-management",
+    name: "update-management",
+    component: () => import("../views/UpdateManagementView.vue"),
   },
   {
-    path: "/configuration/registries",
-    name: "registries",
-    component: () => import("../views/ConfigurationRegistriesView.vue"),
+    path: "/settings",
+    name: "settings",
+    component: () => import("../views/SettingsView.vue"),
   },
   {
-    path: "/configuration/server",
-    name: "server",
-    component: () => import("../views/ConfigurationServerView.vue"),
-  },
-  {
-    path: "/configuration/triggers",
-    name: "triggers",
-    component: () => import("../views/ConfigurationTriggersView.vue"),
-  },
-  {
-    path: "/configuration/watchers",
-    name: "watchers",
-    component: () => import("../views/ConfigurationWatchersView.vue"),
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: () => import("../views/NotFoundView.vue"),
   },
 ];
 
@@ -57,7 +47,7 @@ const router = createRouter({
  * @returns {Promise<void>}
  */
 async function applyAuthNavigationGuard(to) {
-  if (to.name === "login") {
+  if (to.name === "login" || to.name === "not-found") {
     return true;
   } else {
     // Get current user

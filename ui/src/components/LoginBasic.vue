@@ -1,28 +1,26 @@
 <template>
   <v-form @keyup.enter="login">
-    <v-card-text>
-      <v-text-field
-        label="Username"
-        v-model="username"
-        append-icon="mdi-account"
-        :rules="[rules.required]"
-        autocomplete="username"
-        variant="outlined"
-        autofocus
-      />
-      <v-text-field
-        label="Password"
-        type="password"
-        v-model="password"
-        append-icon="mdi-lock"
-        :rules="[rules.required]"
-        autocomplete="current-password"
-        variant="outlined"
-      />
-      <v-btn block color="primary" :disabled="!valid" @click="login">
-        Login
-      </v-btn>
-    </v-card-text>
+    <v-text-field
+      label="Username"
+      v-model="username"
+      prepend-inner-icon="mdi-account-outline"
+      :rules="[rules.required]"
+      autocomplete="username"
+      autofocus
+      class="mb-3"
+    />
+    <v-text-field
+      label="Password"
+      type="password"
+      v-model="password"
+      prepend-inner-icon="mdi-lock-outline"
+      :rules="[rules.required]"
+      autocomplete="current-password"
+      class="mb-4"
+    />
+    <v-btn block color="secondary" size="large" :disabled="!valid" @click="login" rounded="lg">
+      Sign In
+    </v-btn>
   </v-form>
 </template>
 

@@ -7,8 +7,8 @@ The `ifttt` trigger lets you send container update notifications to Ifttt via th
 
 | Env var                                  | Required       | Description     | Supported values | Default value when missing |
 | ---------------------------------------- |:--------------:| --------------- | ---------------- | -------------------------- | 
-| `WUD_TRIGGER_IFTTT_{trigger_name}_KEY`   | :red_circle:   | The Webhook key |                  |                            |
-| `WUD_TRIGGER_IFTTT_{trigger_name}_EVENT` | :white_circle: | The event name  |                  | `wud-image`.               |
+| `BT_TRIGGER_IFTTT_{trigger_name}_KEY`   | :red_circle:   | The Webhook key |                  |                            |
+| `BT_TRIGGER_IFTTT_{trigger_name}_EVENT` | :white_circle: | The event name  |                  | `bigtower-image`.               |
 
 ?> This trigger also supports the [common configuration variables](configuration/triggers/?id=common-trigger-configuration).
 
@@ -32,20 +32,20 @@ services:
     image: getwud/wud
     ...
     environment:
-      - WUD_TRIGGER_IFTTT_PROD_KEY=*******************************************
+      - BT_TRIGGER_IFTTT_PROD_KEY=*******************************************
 ```
 
 #### **Docker**
 ```bash
 docker run \
-  -e WUD_TRIGGER_IFTTT_PROD_KEY="*******************************************" \
+  -e BT_TRIGGER_IFTTT_PROD_KEY="*******************************************" \
   ...
   getwud/wud
 ```
 <!-- tabs:end -->
 
 #### Ifttt captured ingredients
-- EventName: `wud-container`
+- EventName: `bigtower-container`
 - OccuredAt: `August 30, 2019 at 06:51PM`
 - Value1: `homeassistant`
 - Value2: `2021.6.5`
@@ -76,7 +76,7 @@ And copy the key from the URL
 #### Select the 'Receive a web request' trigger
 ![image](ifttt_request_trigger.png)
 
-#### Enter the trigger event name (wud-container by default)
+#### Enter the trigger event name (bigtower-container by default)
 ![image](ifttt_event.png)
 
 #### Define the 'then that' action
